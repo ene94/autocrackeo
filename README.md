@@ -1,11 +1,14 @@
 # Autocrackeo
-Script en python que automatiza el uso del hashcat para crackear contraseÃas
+Script en python que automatiza el uso del hashcat para crackear contraseñas
 
-# Prerequisitos
+
+## Prerequisitos
 * python3 o superior
-* [hashcat(https://github.com/hashcat/hashcat)]
+* [hashcat](https://github.com/hashcat/hashcat)
 
-# Uso
 
-# Autora
-* **Eneritz Azqueta** --> trabajo realizado como becaria de AuditorÃ­a en S21sec
+## Uso
+...
+
+## Autora
+* **Eneritz Azqueta** --> trabajo realizado como becaria de Auditoría en S21sec
