@@ -38,4 +38,4 @@ Probado en windows con python 3 o superior
 
 
 ## Autora
-* **Eneritz Azqueta** → trabajo realizado como becaria de Auditoría en **S21sec**
+* **Eneritz Azqueta** → proyecto realizado como becaria de Auditoría en **S21sec**
