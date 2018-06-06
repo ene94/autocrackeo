@@ -42,9 +42,9 @@ print_cyan(header)
 print_cyan(description)
 
 # pedir datos
-print_cyan("\nPor defecto se utilizará el archivo de hashes = " + hashes_dir + hashes_file + "\n")
+print_cyan("\nPor defecto se utilizará el archivo de hashes = " + os.path.join(hashes_dir, hashes_file) + "\n")
 hashes_file = input('Para elegir otro introdouce el nombre del archivo que se encuentre en el directorio ' + hashes_dir + ': ') or hashes_file
-hashes_path = hashes_dir + hashes_file
+hashes_path = os.path.join(hashes_dir, hashes_file)
 
 print_cyan(format_description)
 hash_format = input('Introduce el nombre de la lista anterior o  el número correspondiente en hashcat al formato del hash: ') or hash_format

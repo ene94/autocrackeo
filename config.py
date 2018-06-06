@@ -4,13 +4,13 @@
 
 # MODIFICAR dependiendo de dónde se ejecute
 
-# en local
-hashcat = "C:\\tools\\hashes\\hashcat\\hashcat64.exe "
-options = " --force "
+# Ejecutable:
+hashcat = os.path.join("hashcat64.exe") # windows
+#hashcat = "hashcat " # linux
 
-# en un servidor de crackeo
-#hashcat = " D:\\hashcat-3.6.0\\hashcat64.exe "
-#options = " -w 3 "
+#Opciones de rendimiento:
+options = " --force " # local
+#options = " -w 3 " # servidor de crackeo
 
 # CONSTANTES
 
@@ -28,9 +28,8 @@ header = '''
                                                      
 --------------------------------------------------------------------------------
 '''
-
-hashes_dir = "hashes\\"
-results_dir = "results\\"
+hashes_dir = "hashes"
+results_dir = "results"
 
 wordlist_custom = " wordlist_custom.txt "# palabras claves del cliente, nombres de sus usuarios... -->  crear para cada proyecto
 wordlist_crackeados = " wordlist_crackeados.txt "# contraseñas crackeadas de otros proyectos
@@ -40,7 +39,7 @@ increment_min = " 1 "# increment min/max
 increment_max = " 7 "
 
 potfile = " " + results_dir + "hashcat.pot "# dónde guardar las contraseñas que se crackeen
-debug = " --debug-mode=1 --debug-file=" + results_dir + "successful_rules.txt "# sólo funciona en -a 0
+debug = " --debug-mode=1 --debug-file=" + os.path.join(results_dir, "successful_rules.txt ") # sólo funciona en -a 0
 
 # Valores por defecto si no introduces nada por teclado
 hashes_file = "test.hash"
