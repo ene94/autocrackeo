@@ -9,11 +9,14 @@ Script en python que automatiza el uso del hashcat para crackear contraseñas
 ## Manual de usuario
 1. Introduce archivos con hashes en /hashes
 2. Rellena con palabras clave los diccionarios
-3. Ejecuta el script: `python3 autocrackeo.py`
-4. Introduce el nombre del archivo de hashes (por ejemplo test.hash)
-5. Introduce el tipo de hash (por ejemplo NTLM o 1000)
-6. Introduce el nombre del diccionario personalizado (por ejemplo wordlist_custom.txt)
-7. Asegúrate de leer en pantalla cómo interactuar con el hashcat, y ¡que comience el crackeo!
+3. Configura el script para tu entorno particular:
+* ejecutable del hashcat: windows / linux
+* opciones de rendimiento: pc normal / servidor especializado
+4. Ejecuta el script: `python3 autocrackeo.py`
+5. Introduce el nombre del archivo de hashes (por ejemplo test.hash)
+6. Introduce el tipo de hash (por ejemplo NTLM o 1000)
+7. Introduce el nombre del diccionario personalizado (por ejemplo wordlist_custom.txt)
+8. Asegúrate de leer en pantalla cómo interactuar con el hashcat, y ¡que comience el crackeo!
 
 * En el directorio **/hashes** se almacenaran los archivos de texto que contengan hases.
 	* test.hash: con los hashes ntlm de las contraseñas (test, Password1, admin2018, .nombre_apellido.)

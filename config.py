@@ -5,7 +5,7 @@
 # MODIFICAR dependiendo de dónde se ejecute
 
 # Ejecutable:
-hashcat = os.path.join("hashcat64.exe") # windows
+hashcat = "hashcat64.exe" # windows
 #hashcat = "hashcat " # linux
 
 #Opciones de rendimiento:

@@ -179,7 +179,7 @@ hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist1.txt C:\wordlist2.txt
 hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlists/\*
 ```
 
-## Reglas: -r
+## Reglas: -r -j -k
 https://hashcat.net/wiki/doku.php?id=rule_based_attack
 * We pueden aplicar reglas a los modos de ataque a=0,1,6,7
 
@@ -188,10 +188,14 @@ Algunos archivos de reglas ya vienen creadas en hashcat:
 * Servidor de Crackeo: hashcat-3.6.0\rules
 
 Mostrar (y no crackear) cada contraseña que probará al aplicar las modificaciones de las reglas al wordlist:
-```hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule --stdout```
+```
+hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule --stdout
+```
 
 Generar un fichero con las reglas que han tenido éxito: sólo funciona con -a 0
-```hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule --debug-mode=1 --debug-file=matched.rule```
+```
+hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule --debug-mode=1 --debug-file=matched.rule
+```
 
 Algunas reglas útiles definidas en hashcat:
 * : no hacer nada
@@ -230,11 +234,14 @@ wordlist.txt (password), rule1.rule (^1$1) y rule2.rule (^2$2)
 2password1
 1password2
 password12
+```
 
+En los modos de ataque -a 1,6,7 se divide en lado derecho e izquierdo, por lo que al escribir la regla hay que indicar a cuál de ellos aplicarlo. En el caso de wordlist1 wordlist2 -j se aplicará al wordlist1, y las reglas de -k al wordlist2.
+```
 hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule
 hashcat64.exe -m 0 -a 1 C:\hashes.txt C:\wordlist1.txt C:\wordlist2.txt -j "c" -k "c$2$0$1$8"
 hashcat64.exe -m 0 -a 6 C:\hashes.txt C:\wordlist.txt ?d?d -j "c$1"
-hashcat64.exe -m 0 -a 6 ?d?d C:\hashes.txt C:\wordlist.txt -k "c$1"
+hashcat64.exe -m 0 -a 7 ?d?d C:\hashes.txt C:\wordlist.txt -k "c$1"
 ```
 
 
