@@ -7,7 +7,7 @@
 	},
 	"parameters": {
 		"executable": "hashcat64.exe",
-		"extra_params": "--username",
+		"extra_params": "",
 		"resources": {
 			"resource_level": "low",
 			"resource_low": "--force",

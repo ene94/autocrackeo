@@ -22,7 +22,7 @@ En el campo paths se especificará la ruta a los directorios en los cuales estar
 ```
 
 ## Parámetros
-Se debe indicar la ruta al ejecutable del hashcat, parametros adicionales que añadir al comando de hashcat, los parámetros relacionados con el rendimiento dependientes del dispositivo en el que se vaya a ejecutar (resource_level: low/high), y la lista de archivos (diccionarios, reglas, máscaras) que se quieran utilizar.
+Se debe indicar la ruta al ejecutable del hashcat, parametros adicionales que añadir al comando de hashcat (por ejemplo --username si se introduce en formato usuario:hash), los parámetros relacionados con el rendimiento dependientes del dispositivo en el que se vaya a ejecutar (resource_level: low/high), y la lista de archivos (diccionarios, reglas, máscaras) que se quieran utilizar.
 ```
 "parameters": {
 	"executable": "hashcat64.exe",
@@ -149,4 +149,5 @@ Cada línea se corresponde con un ataque a ejecutar:
 ```
 
 ## Ejemplo:
-Se puede ver el archivo de configuración de ejemplo: test.json, o los archivos preparados para los modos de funcionamiento fast, basic y full.
+* test.json es únicamente para ver un ejemplo de cada tipo, gran parte de los ataques están repetidos con opciones diferentes. Servirá como guía para construir un nuevo config.json personalizado.
+* fast.json, basic.json y full.json son algunos archivos preparados para utilizarse tal cual, dependiendo de la complejidad que se quiera.

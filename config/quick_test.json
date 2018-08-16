@@ -7,14 +7,16 @@
 	},
 	"parameters": {
 		"executable": "hashcat64.exe",
-		"extra_params": "--username",
+		"extra_params": "",
 		"resources": {
 			"resource_level": "low",
 			"resource_low": "--force",
 			"resource_high": "-w 3"
 		},
 		"wordlists_files": [
-			"custom.dic"
+			"cracked.dic",
+			"custom.dic",
+			"super.dic"
 		],
 		"rules_files": [
 		],
@@ -23,7 +25,7 @@
 	},
 	"attacks" : {
 		"straight": [
-			{"wordlists": [0]}
+			{"wordlists": []}
 		]
 	}
 }

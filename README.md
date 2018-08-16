@@ -54,9 +54,12 @@ Para ver todas las opciones: `python3 autocrackeo.py -h`
 
 ### Ejemplos
 ```
+python3 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json
 python3 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json
 python3 autocrackeo.py -m 1000 hashes\test.hash --config config\basic.json
 python3 autocrackeo.py -m 1000 hashes\test.hash --config config\full.json
+python3 autocrackeo.py -m 1000 hashes\test_only_hash_format.hash --config config\one_word_per_hash.json
+python3 autocrackeo.py -m 1000 hashes\test_user_hash_format.hash --config config\test.json
 ```
 
 ## Organización
