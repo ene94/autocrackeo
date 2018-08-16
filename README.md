@@ -3,14 +3,24 @@ Script en python que automatiza el uso del hashcat para crackear contraseñas
 
 
 ## Requisitos
-* Versión superior a python3
+* Versión python3.6
 * [hashcat](https://github.com/hashcat/hashcat)
 
 ## Manual de usuario
+
+### Por dónde empezar
+
+1. Especifica el path al ejecutable de hashcat en el archivo de configuración, por ejemplo:
+	"executable": "hashcat64.exe" --> en windows
+	"executable": "hashcat" --> en linux
+2. Prueba cualquiera de los comandos del apartado *Ejemplos* de más abajo
+
+### Personalización
+
 1. Introduce archivos con hashes en el directorio hashes.
 2. Introduce archivos de diccionarios, reglas y máscaras en los directorios wordlists, rules y masks respectivamente.
 3. Modifica el archivo de configuración config.json para tu entorno y necesidades.
-	* Presta atención al valor del ejecutable y de la opción de recursos.
+	* **Presta atención al valor del ejecutable y de la opción de recursos**.
 	* Lista los archivos de diccionarios, reglas y máscaras que quieras utilizar en este caso.
 	* Define los modos ataque que quieras lanzar con sus parámetros correspondientes.
 		* La idea es tener varios archivos config.json (fast.json, basic.json, full.json...) que se ajusten a la velocidad/eficiencia que se requiera en cada momento.
