@@ -1,123 +1,126 @@
 # -*- coding: utf-8 -*-
-import os
-import sys
+try:
+	import os, sys, json, argparse
+	from src.color import Color
+	from src.attacks import Attacks
+	from src.hashcat import Hashcat
+	from src.results import Results
+except Exception as e:
+	sys.exit(e)
 
-# ESTILO
-class bcolors:
-    BLUE = '\033[94m'
-    CYAN = '\033[1;36m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    PURPLE = '\033[1;35m'
-    RED = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD_GREEN = '\033[1;32m'
+def get_arguments():
+	"""
+	 Manage input parameters
+	"""
+	parser = argparse.ArgumentParser(description="Automated Hashcat usage tool", epilog="Example: python3 autocrackeo.py -m 1000 hashes\\test.hash --config src\config.json")
+	cmd = parser.add_argument("-m", type=str, dest="hash_type", help="hashcat's hash type number, more info here: https://hashcat.net/wiki/doku.php?id=example_hashes", required=True)
+	parser.add_argument("hash_file", type=str,  help="path to the file with hashes to crack")
+	parser.add_argument("--config", type=str, dest="config_file", help="configuration json file to use with specific attacks", required=True)
+	parser.add_argument("--just-results", action='store_true', help="skips the attacks and just shows the results using the potfile")
+	parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+	return parser.parse_args()
 
-def print_text(text):
-    print(text)
+class Configuration(object):
+	"""
+	 Gather all the information and configuration the program is going to use
+	"""
+	def __init__(self, hash_file, hash_type, config_file):
+		conf = None
+		try:
+			with open(os.path.join(config_file), "r") as f:
+				conf = json.load(f)
 
-def print_yellow(text):
-    print_text(bcolors.YELLOW + text + bcolors.ENDC)
+			"""
+			 Load paths and parameters from config file
+			 And add the relative paths to the files to use
+			"""			
+			#static parameters
+			self.attacks = conf["attacks"]
+			self.paths = conf["paths"]
+			self.static_values = conf["parameters"]
+			self.wordlists, self.rules,self.masks = [], [], []
 
-def print_cyan(text):
-    print_text(bcolors.CYAN + text + bcolors.ENDC)
+			if self.static_values["resources"]["resource_level"] == "low":
+				self.static_values["resource_options"] = self.static_values["resources"]["resource_low"]
+			else:
+				self.static_values["resource_options"] = self.static_values["resources"]["resource_high"]
+			self.static_values["pot_file"] = os.path.join(self.paths["results_dir"], "potfile.pot")
+			self.static_values["out_file"] = os.path.join(self.paths["results_dir"], "plaintext_passwords.txt")
+			self.static_values["out_file_cracked"] = os.path.join(self.paths["results_dir"], "hashes_cracked.txt")
+			self.static_values["out_file_left"] = os.path.join(self.paths["results_dir"], "hashes_left.txt")
+			#self.static_values["report_file"] = os.path.join(self.paths["results_dir"], self.static_values["results_files"]["report_file"])
 
-def print_red(text):
-    print_text(bcolors.RED + text + bcolors.ENDC)
+			#path to the files
+			for wordlist in self.static_values["wordlists_files"]:
+				self.wordlists.append(os.path.join(self.paths["wordlists_dir"], wordlist))
 
-def print_green(text):
-    print_text(bcolors.GREEN + text + bcolors.ENDC)
+			for rules_file in self.static_values["rules_files"]:
+				self.rules.append(os.path.join(self.paths["rules_dir"], rules_file))
 
-# función para mostrar y ejecutar
-def execute_cmd(cmd):
-    print_yellow("\n\n[+] " + cmd)
-    os.system(cmd)
+			for masks_file in self.static_values["masks_files"]:
+				self.masks.append(os.path.join(self.paths["masks_dir"], masks_file))
 
+			# check that files exist
+			file_paths = self.wordlists + self.rules + self.masks
+			for file_path in file_paths:
+				f = os.path.isfile(file_path)
 
-# INTRO Y DATOS NECESARIOS
-exec(open("config.py", encoding="utf-8").read())# cargar de archivo de configuración
+			"""
+			 Load parameters from input arguments
+			"""
+			self.static_values["hash_type"] = hash_type
+			self.static_values["hash_file"] = hash_file
+			self.static_values["config_file"] = config_file
 
-os.system("dir hashes")# si no ejecuto algo no empiezan a salir los colores...
-print_cyan(header)
-print_cyan(description)
+		except Exception as e:
+			Color.show_error(e)
 
-# pedir datos
-print_cyan("\nPor defecto se utilizará el archivo de hashes = " + os.path.join(hashes_dir, hashes_file) + "\n")
-hashes_file = input('Para elegir otro introdouce el nombre del archivo que se encuentre en el directorio ' + hashes_dir + ': ') or hashes_file
-hashes_path = os.path.join(hashes_dir, hashes_file)
+if __name__ == "__main__":
+	"""
+	 configuration: all the config data
+	 attacks: configure attacks from config data
+	 hashcat: calls to hashcat individual attacks
+	 results: generates a report with the results
+	"""
+	os.system("") # enable command colors
+	arguments = get_arguments()
+	conf = Configuration(arguments.hash_file, arguments.hash_type, arguments.config_file)
+	results = Results(conf.static_values)
+	hashcat = Hashcat(conf.static_values, results)
+	attacks = Attacks(hashcat)
 
-print_cyan(format_description)
-hash_format = input('Introduce el nombre de la lista anterior o  el número correspondiente en hashcat al formato del hash: ') or hash_format
-if hash_format in format_dictionary:
-    hash_format = format_dictionary[hash_format]
+	if arguments.just_results == False:
 
-print_cyan("\nPor defecto se utilizará el wordlist_custom =" + wordlist_custom)
-wordlist_custom = input('\nSi quieres utilizar un minidiccionario específico para este proyecto introduce la ruta al archivo: ') or wordlist_custom
+		"""
+		 Execute a specific selection of hashcat attacks
+		 previously defined on the configuration json file
+		 This will be updated gradually as the efficiency of the attacks are measured
+		"""
+		print(Color.cyan("Press enter or 's' to see hashcat's status..."))
+		for attack_name in conf.attacks:
+			print(Color.yellow("\n" + attack_name))
+			if "straight" in attack_name:
+				attacks.straight_attacks(attack_name, conf.attacks[attack_name], conf.wordlists, conf.rules)
+			elif "combinator" in attack_name:
+				attacks.combinator_attacks(attack_name, conf.attacks[attack_name], conf.wordlists)
+			elif "brute_force" in attack_name:
+				attacks.brute_force_attacks(attack_name, conf.attacks[attack_name], conf.masks)
+			elif "hybrid" in attack_name:
+				attacks.hybrid_attacks(attack_name, conf.attacks[attack_name], conf.wordlists, conf.masks)
+			elif "one_word_per_hash" in attack_name:
+				attacks.OneWordPerHashAttacks(attack_name, conf.attacks[attack_name], conf.wordlists)
+			else:
+				print(Color.red("This attack name is not recognized!"))
 
-print_cyan("\nDATOS INTRODUCIDOS --> Archivo " + hashes_path + " con formato " + hash_format + " y diccionario personalizado " + wordlist_custom + " ...")
-
-# mini manual de usuario
-print_cyan(user_guide)
-input('¿Empezamos? (dale al enter)')# para que dé tiempo a leer
-
-
-# CRACKEO
-
-print_cyan("\n\n1. PASAR WORDLISTS Y COMBINAR REGLAS: [-a 0 wordlist -r reglas -r reglas] (test, TEST, Test, .test, test2018, .test2018)\n")
-execute_cmd(hashcat + "-m " + hash_format + " -a 0 " + hashes_path + wordlist_crackeados + wordlist_variado + wordlist_custom + " -r " + rules_super  + " -r " + rules_super + " --potfile-path " + potfile + options + debug)
-
-
-print_cyan("\n\n2. PASAR WODRLISTS CON ATAQUE HIBRIDO POR LA DERECHA: [-a 6 wordlist ?d?l?u?s?a -i] (test9999, TEST9999, Test9999, test.., TEST.., Test..)\n")
-execute_cmd(hashcat + "-m " + hash_format + " -a 6 " + hashes_path + wordlist_crackeados + wordlist_variado + wordlist_custom + "?d?d?d?d -j l -i --increment-min 1 --increment-max 4 --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 6 " + hashes_path + wordlist_crackeados + wordlist_variado + wordlist_custom + "?d?d?d?d -j u -i --increment-min 1 --increment-max 4 --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 6 " + hashes_path + wordlist_crackeados + wordlist_variado + wordlist_custom + "?d?d?d?d -j c -i --increment-min 1 --increment-max 4 --potfile-path " + potfile + options)
-
-execute_cmd(hashcat + "-m " + hash_format + " -a 6 " + hashes_path + wordlist_crackeados + wordlist_variado + wordlist_custom + "?a?a? -j l -i --increment-min 1 --increment-max 2 --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 6 " + hashes_path + wordlist_crackeados + wordlist_variado + wordlist_custom + "?a?a? -j u -i --increment-min 1 --increment-max 2 --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 6 " + hashes_path + wordlist_crackeados + wordlist_variado + wordlist_custom + "?a?a? -j c -i --increment-min 1 --increment-max 2 --potfile-path " + potfile + options)
-
-
-print_cyan("\n\n3. PASAR WODRLISTS CON ATAQUE HIBRIDO POR LA IZQUIERDA: [-a 7 ?d?l?u?s?a wordlist] (9999test, 9999TEST, 9999Test, ..test, ..TEST, ..Test)\n")
-execute_cmd(hashcat + "-m " + hash_format + " -a 7 " + hashes_path + " ?d?d?d?d" + wordlist_crackeados + wordlist_variado + wordlist_custom + "-k l -i --increment-min 1 --increment-max 4 --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 7 " + hashes_path + " ?d?d?d?d" + wordlist_crackeados + wordlist_variado + wordlist_custom + "-k u -i --increment-min 1 --increment-max 4 --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 7 " + hashes_path + " ?d?d?d?d" + wordlist_crackeados + wordlist_variado + wordlist_custom + "-k c -i --increment-min 1 --increment-max 4 --potfile-path " + potfile + options)
-
-execute_cmd(hashcat + "-m " + hash_format + " -a 7 " + hashes_path + " ?a?a" + wordlist_crackeados + wordlist_variado + wordlist_custom + "-k l -i --increment-min 1 --increment-max 2 --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 7 " + hashes_path + " ?a?a" + wordlist_crackeados + wordlist_variado + wordlist_custom + "-k u -i --increment-min 1 --increment-max 2 --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 7 " + hashes_path + " ?a?a" + wordlist_crackeados + wordlist_variado + wordlist_custom + "-k c -i --increment-min 1 --increment-max 2 --potfile-path " + potfile + options)
-
-
-print_cyan("\n\n4. PASAR WORDLISTS COMBINADOS: [-a 1 wordlist wordlist] --> (testtest, testpassword, passwordtest, passwordpassword) VA A TARDAR y ni siquiera estoy utilizando reglas...\n")
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_crackeados + wordlist_crackeados + " --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_variado + wordlist_variado + " --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_custom + wordlist_custom + " --potfile-path " + potfile + options)
-
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_crackeados + wordlist_variado + " --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_variado + wordlist_custom + " --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_custom + wordlist_crackeados + " --potfile-path " + potfile + options)
-
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_variado + wordlist_crackeados + " --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_custom + wordlist_variado + " --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_crackeados + wordlist_custom + " --potfile-path " + potfile + options)
-
-
-print_cyan("\n\n5. PASAR WORDLISTS COMBINADOS CON REGLAS ESPECÍFICAS: [-a 1 wordlist wordlist] --> (SÓLO WORDLIST_VARIADO) Esto es mejor hacerlo a mano con lo que se te ocurra... (Testuser1, TestUser1, test.user, test_user)\n")
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_variado + wordlist_variado + " -j c -k '$1' --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_variado + wordlist_variado + " -j c -k 'c$1' --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_variado + wordlist_variado + " -k \"^.\" -j \"^_$.\" --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_variado + wordlist_variado + " -k \"^.\" --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_variado + wordlist_variado + " -k \"^_\" --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 1 " + hashes_path + wordlist_variado + wordlist_variado + " -k \"^@\" --potfile-path " + potfile + options)
-
-
-print_cyan("\n\n6. ATAQUE DE FUERZA BRUTA: [-a 3 ?1 -1?d?l?u?s?a] --> VA A TARDAR... (0aA, 0aA.) increment-min/increment-max: " + increment_min + "/" + increment_max)
-execute_cmd(hashcat + "-m " + hash_format + " -a 3 " + hashes_path + " ?1?1?1?1?1?1?1?1?1?1 -1?d?l?u -i --increment-min " + increment_min + " --increment-max " + increment_max + " --potfile-path " + potfile + options)
-execute_cmd(hashcat + "-m " + hash_format + " -a 3 " + hashes_path + " ?1?1?1?1?1?1?1?1?1?1 -1?a -i --increment-min " + increment_min + " --increment-max " + str(int(increment_max)-1) + " --potfile-path " + potfile + options)
-
-# RESULTADOS
-print_green("\n\nRESULTADO: hashes crackeados:")
-cmd = hashcat + "-m " + hash_format + " -a 0 " + hashes_path + " --potfile-path" + potfile +  "--show" + options
-print_yellow("\n\n[+] " + cmd)
-print(bcolors.GREEN)
-os.system(cmd)
-print(bcolors.ENDC)
+	"""
+	 Generate results files
+	 Show results on screen
+	"""
+	# SAVE
+	hashcat.save_cracked()
+	hashcat.save_left()
+	
+	# PRINT SUMMARY
+	print(Color.yellow(results.get_summary()))
+	
+	print(Color.yellow("\nMischief Managed!"))

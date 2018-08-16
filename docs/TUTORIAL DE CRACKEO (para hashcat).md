@@ -32,6 +32,9 @@ https://hashcat.net/wiki/doku.php?id=example_hashes
 	* user:hash:domain:organization?::: --> para que hascat lo reconozca formatear a hash:user
 	* 4dd8965d1d476fa0d026722989a6b772:3060147285011
 
+* 1722 = OSX v10.7
+	* 648742485c9b0acd786a233b2330197223118111b481abfa0ab8b3e8ede5f014fc7c523991c007db6882680b09962d16fd9c45568260531bdb34804a5e31c22b4cfeb32d
+
 * 1800 = sha512crypt , SHA512 (Unix)
 	* $6$52450745$k5ka2p8bFuSmoVT1tzOyyuaREkkKBcCNqoDKzYiJL9RaE8yMnPgh2XzzF0NDrUhgrcLwg78xs1w5pJiypEdFX/
 
@@ -47,6 +50,9 @@ https://hashcat.net/wiki/doku.php?id=example_hashes
 	* --> para que hashcat lo reconozca formatear a hash:user
 	* 7A963A529D2E3229:3682427524
 
+* 3200 = bcrypt $2\*$, Blowfish (Unix)
+	* $2a$05$LhayLxezLhK1LhWvKxCyLOj0j1u.Kj0jZ0pEmm134uzrQlFvQJLF6
+
 * 5500 = NetNTLMv1, NetNTLMv1+ESS
 	* u4-netntlm::kNS:338d08f8e26de93300000000000000000000000000000000:9526fb8c23a90751cdd619b6cea564742e1e4bf33006ba41:cb8086049ec4736c
 
@@ -55,6 +61,9 @@ https://hashcat.net/wiki/doku.php?id=example_hashes
 
 * 13400 = KeePass 1 (AES/Twofish) and KeePass 2 (AES)
 	* $keepass$*1*50000*0*3757...
+
+Nota: hay casos en los que no hace falta poner el usuario (MD5, bcrypt...) y para que no falle le tienes que indicar que además del hash le estás dando el usuario:
+	* username:hash con la opción --username
 
 
 ## Tipos de ataque con hashcat: -a
@@ -71,7 +80,7 @@ Prueba cada línea del diccionario
 ```
 hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist1.txt
 con reglas desde archivo: hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist1.txt -r C:\rules1.rule
-con reglas a mano: hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist1.txt -j 'c$2$0$1$8'
+con reglas a mano: hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist1.txt -j c$2$0$1$8
 varios diccionarios: hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist1.txt C:\wordlist2.txt -r C:\rules1.rule
 ```
 
@@ -82,14 +91,22 @@ Prueba cada combinación de parejas de palabras de dos wordlists
 
 ```
 hashcat64.exe -m 0 -a 1 C:\hashes.txt C:\wordlist1.txt C:\wordlist2.txt
-combinando reglas: hashcat64.exe -m 0 -a 1 C:\hashes.txt C:\wordlist1.txt C:\wordlist2.txt -j 'c' -k 'c$2$0$1$8'
+combinando reglas: hashcat64.exe -m 0 -a 1 C:\hashes.txt C:\wordlist1.txt C:\wordlist2.txt -j c -k c$2$0$1$8
 ```
 
 ### Brute-force: -a 3
 Prueba todas las combinaciones posibles
 
-```hashcat64.exe -m 0 -a 3 C:\hashes.txt
+Le puedes pasar a mano una máscara que quieres que pruebe:
+```
+hashcat64.exe -m 0 -a 3 C:\hashes.txt
 con máscara: hashcat64.exe -m 0 -a 3 C:\hashes.txt ?u?l?l?l?l?l?d?d?d?d
+```
+
+Puedes pasarle uno o varios archivos con máscaras definidas en ella y los probará todos uno a uno:
+```
+hashcat64.exe -m 0 -a 3 C:\hashes.txt C:\masks.hcmask
+hashcat64.exe -m 0 -a 3 C:\hashes.txt C:\masks1.hcmask C:\masks2.hcmask
 ```
 
 Probar fuerza bruta hasta 0-9 caracteres, tardaría años...
@@ -153,6 +170,7 @@ Si pones una máscara de tamaño 10 (?1?1?1?1?1?1?1?1?1?1 -1?d -i --increment-mi
 
 Cargar máscaras de un fichero: 
 * escribir máscaras en un fichero línea a línea con formato: charset1,charset2,charset3,charset4,mask
+* si cargas dos ficheros, se ejecutará una vez cada opción de cada fichero
 
 Se pueden personalizar los patrones de fuerza bruta, por ejemplo indicando que cierta posición sea números y signos de puntuación definidos, cierta otra posición sea sólo minúsculas, otra posición sólo mayúscula, etc.
 De esta forma, se consiguen eliminar muchísimos intentos que no son necesarios y que nos hacen perder tiempo.
@@ -185,7 +203,7 @@ https://hashcat.net/wiki/doku.php?id=rule_based_attack
 
 Algunos archivos de reglas ya vienen creadas en hashcat:
 * Kali: /usr/share/hashcat/rules
-* Servidor de Crackeo: hashcat-3.6.0\rules
+* Windows: hashcat-3.6.0\rules
 
 Mostrar (y no crackear) cada contraseña que probará al aplicar las modificaciones de las reglas al wordlist:
 ```
@@ -194,7 +212,7 @@ hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule --stdout
 
 Generar un fichero con las reglas que han tenido éxito: sólo funciona con -a 0
 ```
-hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule --debug-mode=1 --debug-file=matched.rule
+hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule --debug-mode=1 --debug-file=matched_rule.txt
 ```
 
 Algunas reglas útiles definidas en hashcat:
@@ -239,20 +257,25 @@ password12
 En los modos de ataque -a 1,6,7 se divide en lado derecho e izquierdo, por lo que al escribir la regla hay que indicar a cuál de ellos aplicarlo. En el caso de wordlist1 wordlist2 -j se aplicará al wordlist1, y las reglas de -k al wordlist2.
 ```
 hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule
-hashcat64.exe -m 0 -a 1 C:\hashes.txt C:\wordlist1.txt C:\wordlist2.txt -j "c" -k "c$2$0$1$8"
-hashcat64.exe -m 0 -a 6 C:\hashes.txt C:\wordlist.txt ?d?d -j "c$1"
-hashcat64.exe -m 0 -a 7 ?d?d C:\hashes.txt C:\wordlist.txt -k "c$1"
+hashcat64.exe -m 0 -a 1 C:\hashes.txt C:\wordlist1.txt C:\wordlist2.txt -j c -k c$2$0$1$8
+hashcat64.exe -m 0 -a 6 C:\hashes.txt C:\wordlist.txt ?d?d -j c$1
+hashcat64.exe -m 0 -a 7 ?d?d C:\hashes.txt C:\wordlist.txt -k c$1
 ```
 
+Si añades más de una regla manual -j o -k se ejecutará tan sólo la última escrita.
 
-## Resultados: --potfile-path --show --left --username -o --outfile-format
+## Opciones de rendimiento: --force -w
+* --force: Si estás en una máquina con pocos recursos (sin GPU...) tienes que añadir esta opción.
+* -w 3: Si estás en una máquina con muchos recursos, puedes regular la carga de trabajo que tendrá el hashcat.
+
+## Resultados: --potfile-path --show --left -o --outfile-format
 Generar resultados:
 * --potfile-path: Ruta en la que se quieren guardar las contraseñas que crackee. Antes de empezar lee el potfile para descargar de la lista de hashes las que ya se hayan crackeado (para no repetirse)
 * -o outfile.txt: Almacenar contraseñas guardadas en un archivo, en un formato concreto (indepediente de hashcat)
 * --outfile-format: almacenarlo en un formato concreto:
 	* 1: hash
-	* 2: contraseña en claro
-	* 3: hash:claro
+	* 2: contraseña en texto plano
+	* 3: hash:plain
 	* 4: contraseña en hexadecimal
 	* 5: hash:hex
 	* 6: plain:hex
@@ -284,6 +307,11 @@ hashcat64.exe --session SessionName --restore
 ```
 
 # EXTRA: 
+
+## Otras notas:
+Si vas a ejecutar el hashcat en diferentes terminales, cosas a tener en cuenta:
+* Powershell, para añadir reglas manuales: -j '$1$2$3$4'
+* Consola y cmder: -j $1$2$3$4 o -j "$1$2$3$4"
 
 ## Empty passwords:
 aad3b435b51404eeaad3b435b51404ee (LM)

@@ -1,0 +1,29 @@
+{
+	"paths": {
+		"wordlists_dir": "wordlists",
+		"rules_dir": "rules",
+		"masks_dir": "masks",
+		"results_dir": "results"
+	},
+	"parameters": {
+		"executable": "hashcat64.exe",
+		"extra_params": "--username",
+		"resources": {
+			"resource_level": "low",
+			"resource_low": "--force",
+			"resource_high": "-w 3"
+		},
+		"wordlists_files": [
+			"custom.dic"
+		],
+		"rules_files": [
+		],
+		"masks_files": [
+		]
+	},
+	"attacks" : {
+		"straight": [
+			{"wordlists": [0]}
+		]
+	}
+}
