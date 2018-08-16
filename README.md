@@ -11,10 +11,13 @@ Probado en windows/linux con python 3.6.3
 
 ### Por dónde empezar
 
-1. Especifica el path al ejecutable de hashcat en el archivo de configuración, por ejemplo:
-	* "executable": "hashcat64.exe" --> en windows
-	* "executable": "hashcat" --> en linux
-2. Prueba cualquiera de los comandos del apartado *Ejemplos* de más abajo
+1. Especifica el path al ejecutable de hashcat en los archivos de configuración que quieras probar, por ejemplo en quick_test.json:
+	* para Windows --> "executable": "hashcat64.exe"
+	* para Linux --> "executable": "hashcat"
+2. Prueba cualquiera de los comandos del apartado *Ejemplos* de más abajo, por ejemplo:
+```
+python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json
+```
 
 ### Personalización
 
@@ -26,7 +29,7 @@ Probado en windows/linux con python 3.6.3
 	* Define los modos ataque que quieras lanzar con sus parámetros correspondientes.
 		* La idea es tener varios archivos config.json (fast.json, basic.json, full.json...) que se ajusten a la velocidad/eficiencia que se requiera en cada momento.
 		* En config\test.json hay múltiples ejemplos del formato requerido en cada tipo de ataque.
-4. Ejecuta el programa: `python3 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json`
+4. Ejecuta el programa: `python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json`
 Durante la ejecución...
 	* En plaintext_passwords.txt se irán almacenando las contraseñas en texto planon.
 	* Se muestra por pantalla la ejecución del hashcat, por lo que se puede interactuar con él:
@@ -39,7 +42,7 @@ Durante la ejecución...
 Nota: El tiempo que tarde dependerá de muchos factores como el número de hashes, el tipo de hash, el tamaño de los diccionarios, la capacidad del equipo, etc.
 
 ### Ayuda
-Para ver todas las opciones: `python3 autocrackeo.py -h`
+Para ver todas las opciones: `python3.6 autocrackeo.py -h`
 
 	usage: autocrackeo.py [-h] -m HASH_TYPE --config CONFIG_FILE [--just-results]
 	                      [--version]
@@ -61,13 +64,13 @@ Para ver todas las opciones: `python3 autocrackeo.py -h`
 
 ### Ejemplos
 ```
-python3 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json
-python3 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json
-python3 autocrackeo.py -m 1000 hashes\test.hash --config config\basic.json
-python3 autocrackeo.py -m 1000 hashes\test.hash --config config\full.json
-python3 autocrackeo.py -m 1000 hashes\test_only_hash_format.hash --config config\one_word_per_hash.json
-python3 autocrackeo.py -m 1000 hashes\test_user_hash_format.hash --config config\test.json
-python3 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json --just-results
+python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json
+python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json
+python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\basic.json
+python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\full.json
+python3.6 autocrackeo.py -m 1000 hashes\test_only_hash_format.hash --config config\one_word_per_hash.json
+python3.6 autocrackeo.py -m 1000 hashes\test_user_hash_format.hash --config config\test.json
+python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json --just-results
 ```
 
 ## Organización
