@@ -3,7 +3,8 @@ Script en python que automatiza el uso del hashcat para crackear contraseñas
 
 
 ## Requisitos
-* Versión python3.6
+Probado en windows/linux con python 3.6.3
+* [python3.6](https://www.python.org/downloads/)
 * [hashcat](https://github.com/hashcat/hashcat)
 
 ## Manual de usuario
@@ -11,8 +12,8 @@ Script en python que automatiza el uso del hashcat para crackear contraseñas
 ### Por dónde empezar
 
 1. Especifica el path al ejecutable de hashcat en el archivo de configuración, por ejemplo:
-	"executable": "hashcat64.exe" --> en windows
-	"executable": "hashcat" --> en linux
+	* "executable": "hashcat64.exe" --> en windows
+	* "executable": "hashcat" --> en linux
 2. Prueba cualquiera de los comandos del apartado *Ejemplos* de más abajo
 
 ### Personalización
@@ -82,9 +83,6 @@ El proyecto está dividido por directorios de distintos recursos. Aunque en ning
 * En el directorio **docs/** se almacenarán archivos de interés relacionados con el proyecto:
 	* changelog.md: aquí se irán indicando los cambios realizados y las nuevas ideas
 	* Tutorial de crackeo (para hashcat).md: aquí he reunido los conceptos y ejemplos del hashcat que me han sido de utilidad para realizar este proyecto.
-
-## Compatibilidad
-Probado en windows/linux con python 3.6.3
 
 ## Autora
 * **Eneritz Azqueta** → proyecto realizado como becaria de Auditoría en **S21sec**
