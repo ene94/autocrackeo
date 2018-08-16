@@ -7,10 +7,6 @@ Script en python que automatiza el uso del hashcat para crackear contraseñas
 * [hashcat](https://github.com/hashcat/hashcat)
 
 ## Manual de usuario
-```
-python3 autocrackeo.py -m 1000 hashes\test.hash --config config\test.json
-```
-
 1. Introduce archivos con hashes en el directorio hashes.
 2. Introduce archivos de diccionarios, reglas y máscaras en los directorios wordlists, rules y masks respectivamente.
 3. Modifica el archivo de configuración config.json para tu entorno y necesidades.
@@ -60,10 +56,10 @@ python3 autocrackeo.py -m 1000 hashes\test.hash --config config\basic.json
 python3 autocrackeo.py -m 1000 hashes\test.hash --config config\full.json
 python3 autocrackeo.py -m 1000 hashes\test_only_hash_format.hash --config config\one_word_per_hash.json
 python3 autocrackeo.py -m 1000 hashes\test_user_hash_format.hash --config config\test.json
+python3 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json --just-results
 ```
 
 ## Organización
-
 El proyecto está dividido por directorios de distintos recursos. Aunque en ningún momento se restringe completamente a seguir esta estructura. Los directorios de hashes, diccionarios, reglas, máscaras y resultados, se pueden especificar como parámetros de entrada o en la configuración json, por lo que se pueden modificar o unificar perfectamente.
 
 * En el directorio **hashes/** se almacenaran los archivos de texto que contengan hases.
