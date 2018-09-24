@@ -5,14 +5,7 @@
 		"masks_dir": "masks",
 		"results_dir": "results"
 	},
-	"parameters": {
-		"executable": "hashcat64.exe",
-		"extra_params": "--username",
-		"resources": {
-			"resource_level": "low",
-			"resource_low": "--force",
-			"resource_high": "-w 3"
-		},
+	"files": {
 		"wordlists_files": [
 			"custom.dic",
 			"cracked.dic",
@@ -20,10 +13,10 @@
 			"usernames.dic"
 		],
 		"rules_files": [
-			"rules_basic.rule"
+			"basic.rule"
 		],
 		"masks_files": [
-			"masks_basic.hcmask"
+			"basic.hcmask"
 		]
 	},
 	"attacks" : {

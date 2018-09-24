@@ -11,7 +11,7 @@ Para ejecutar el programa autocrackeo, se tiene que proporcionar un archivo de c
 	* full.json: configuración para una ejecución más completa, puede tardar semanas, meses, años incluso. Además de probar las opciones básicas, añadirá reglas combinadas con diccionarios grandes, máscaras que abarquen más caracteres de fuerza bruta, etc.
 
 ## Rutas
-En el campo paths se especificará la ruta a los directorios en los cuales estarán situados los diccionarios, reglas, máscaras y resultados. Se puede indicar una ruta tanto relativa como absoluta, por ejemplo: "wordlists" o "C:\\tools\\hashes\\autocrackeo\\wordlists". En el caso de que no se quiera utilizar esta organización de directorios, habrá que indicar las rutas hasta los directorios en los que se encuentren los recursos necesarios.
+En el campo paths se especificará la ruta a los directorios en los cuales estarán situados los diccionarios, reglas, máscaras y resultados. Se puede indicar una ruta tanto relativa como absoluta, por ejemplo: "wordlists" o "C:\\tools\\wordlists". En el caso de que no se quiera utilizar esta organización de directorios, habrá que indicar las rutas hasta los directorios en los que se encuentren los recursos necesarios.
 ```
 "paths": {
 	"wordlists_dir": "wordlists",
@@ -22,16 +22,9 @@ En el campo paths se especificará la ruta a los directorios en los cuales estar
 ```
 
 ## Parámetros
-Se debe indicar la ruta al ejecutable del hashcat, parametros adicionales que añadir al comando de hashcat (por ejemplo --username si se introduce en formato usuario:hash), los parámetros relacionados con el rendimiento dependientes del dispositivo en el que se vaya a ejecutar (resource_level: low/high), y la lista de archivos (diccionarios, reglas, máscaras) que se quieran utilizar.
+Se debe indicar la lista de archivos (diccionarios, reglas, máscaras) que se quieran utilizar.
 ```
-"parameters": {
-	"executable": "hashcat64.exe",
-	"extra_params": "--username",
-	"resources": {
-		"resource_level": "low",
-		"resource_low": "--force",
-		"resource_high": "-w 3"
-	},
+"files": {
 	"wordlists_files": [
 		"custom.dic",
 		"cracked.dic",
@@ -57,26 +50,28 @@ Hashcat tiene varios modos de ataque (-a0 directo, -a1 combinado, -a3 fuerza bru
 Los archivos: wordlist=w, rules=r y masks=m
 Las introducciones manuales: rules_manual_left="j", rules_manual_right="k" y mask="m" 
 
-| Tipos de ataque                    | Resumen de parámetros      |
-|------------------------------------|----------------------------|
-| straight                           | [w]                        |
-| straight_with_rules_manual         | [w] + "j"                  |
-| straight_with_rules_files          | [w] + [r]                  |
-| straight_with_combined_rules_files | [w] + r + r                |
-| combinator                         | w + w                      |
-| combinator_with_rules_manual       | w + w + "j" + "k"          |
-| brute_force_automatic              | -i min max                 |
-| brute_force_with_masks_manual      | "m" + -i min max           |
-| brute_force_with_masks_files       | m + -i min max             |
-| hybrid_right_with_masks_files      | w + m + "j" + -i min max   |
-| hybrid_right_with_masks_manual     | w + "m" + "j" + -i min max |
-| hybrid_left_with_masks_files       | w + m + "k" + -i min max   |
-| hybrid_left_with_masks_manual      | w + "m" + "k" + -i min max |
-| one_word_per_hash                  | [w]                        |
+| Tipos de ataque                    | Resumen de parámetros      | Ejemplo de password 
+|------------------------------------|----------------------------|---------------------
+| straight                           | [w]                        | word
+| straight_with_rules_manual         | [w] + "j"                  | Word
+| straight_with_rules_files          | [w] + [r]                  | Word
+| straight_with_combined_rules_files | [w] + r + r                | .Word.
+| combinator                         | w + w                      | wordtest
+| combinator_with_rules_manual       | w + w + "j" + "k"          | .WordTest.
+| brute_force_automatic              | -i min max                 | zzzzzzz
+| brute_force_with_masks_manual      | "m" + -i min max           | zzzzzzz
+| brute_force_with_masks_files       | m + -i min max             | zzzzzzz
+| hybrid_right_with_masks_files      | w + m + "j" + -i min max   | Word999
+| hybrid_right_with_masks_manual     | w + "m" + "j" + -i min max | Word999
+| hybrid_left_with_masks_files       | w + m + "k" + -i min max   | 999Word
+| hybrid_left_with_masks_manual      | w + "m" + "k" + -i min max | 999Word
+|----------------------------------------------------------------------------------------
+| one_word_per_hash                  | [w]                        | username 
 
 Nota: En el ataque one_word_per_hash, sólo admite archivos de hash (hash_file) en dos formatos:
 * hash
-* username:hash añadiendo la opción de configuración "extra_param": "--username".
+* username:hash añadiendo como argumento de entrada --extra-params "--username".
+Este ataque sirve para probar usuario = contraseña. Hace falta un wordlist con todos los nombres de usuario con el mismo orden y número de líneas que el hasfile.
 
 ### Definición de los ataques
 Para seleccionar archivos de diccionarios/reglas/máscaras en cada ataque hay varias formas:

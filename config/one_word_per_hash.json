@@ -5,14 +5,7 @@
 		"masks_dir": "masks",
 		"results_dir": "results"
 	},
-	"parameters": {
-		"executable": "hashcat64.exe",
-		"extra_params": "",
-		"resources": {
-			"resource_level": "low",
-			"resource_low": "--force",
-			"resource_high": "-w 3"
-		},
+	"files": {
 		"wordlists_files": [
 			"usernames.dic"
 		],

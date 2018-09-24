@@ -11,29 +11,43 @@ Probado en windows/linux con python 3.6.3
 
 ### Por dónde empezar
 
-1. Especifica el path al ejecutable de hashcat en los archivos de configuración que quieras probar, por ejemplo en quick_test.json:
-	* para Windows --> "executable": "hashcat64.exe"
-	* para Linux --> "executable": "hashcat"
-2. Prueba cualquiera de los comandos del apartado *Ejemplos* de más abajo, por ejemplo:
+1. Especifica el path al ejecutable de hashcat y las opciones de rendimiento en el archivo de configuración del equipo "host-config.json", por ejemplo:
 ```
-python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json
+{
+	"executable": "hashcat64.exe",
+	"resources": {
+		"resource_level": "low",
+		"resource_low": "--force",
+		"resource_high": "-w 3"
+	}
+}
+```
+
+2. Prueba cualquiera de los comandos del apartado *Ejemplos* de más abajo, por ejemplo:
+Ejecutar:
+```
+python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json --extra-params="--username"
+```
+Sólo ver los resultados:
+```
+python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json --extra-params="--username" --just-results
 ```
 
 ### Personalización
 
 1. Introduce archivos con hashes en el directorio hashes.
-2. Introduce archivos de diccionarios, reglas y máscaras en los directorios wordlists, rules y masks respectivamente.
-3. Modifica el archivo de configuración config.json para tu entorno y necesidades.
+2. Introduce archivos de diccionarios, reglas y máscaras en los directorios wordlists/, rules/ y masks/ respectivamente.
+3. Modifica el archivo de configuración host-config.json para tu entorno y necesidades.
 	* **Presta atención al valor del ejecutable y de la opción de recursos**.
+4. Modifica los archivos de configuración de ataques a tu gusto.
 	* Lista los archivos de diccionarios, reglas y máscaras que quieras utilizar en este caso.
 	* Define los modos ataque que quieras lanzar con sus parámetros correspondientes.
 		* La idea es tener varios archivos config.json (fast.json, basic.json, full.json...) que se ajusten a la velocidad/eficiencia que se requiera en cada momento.
 		* En config\test.json hay múltiples ejemplos del formato requerido en cada tipo de ataque.
-4. Ejecuta el programa: `python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json`
-Durante la ejecución...
-	* En plaintext_passwords.txt se irán almacenando las contraseñas en texto planon.
+4. Ejecuta el programa: Durante la ejecución...
+	* En plaintext_passwords.txt se irán almacenando las contraseñas en texto plano.
 	* Se muestra por pantalla la ejecución del hashcat, por lo que se puede interactuar con él:
-		* **s**: mostrar estado (status)
+		* **s**: mostrar estado (status) / también sirve el "Enter"
 		* **p**: pausar (pause)
 		* **r**: reanudar (resume)
 		* **b**: saltarse fases de un mismo ataque (bypass)
@@ -44,33 +58,17 @@ Nota: El tiempo que tarde dependerá de muchos factores como el número de hashe
 ### Ayuda
 Para ver todas las opciones: `python3.6 autocrackeo.py -h`
 
-	usage: autocrackeo.py [-h] -m HASH_TYPE --config CONFIG_FILE [--just-results]
-	                      [--version]
-	                      hash_file
-
-	Automated Hashcat usage tool
-
-	positional arguments:
-	  hash_file             path to the file with hashes to crack
-
-	optional arguments:
-	  -h, --help            show this help message and exit
-	  -m HASH_TYPE          hashcat's hash type number, more info here:
-	                        https://hashcat.net/wiki/doku.php?id=example_hashes
-	  --config CONFIG_FILE  configuration json file to use with specific attacks
-	  --just-results        skips the attacks and just shows the results using the
-	                        potfile
-	  --version             show program's version number and exit
-
 ### Ejemplos
 ```
-python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json
-python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json
-python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\basic.json
-python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\full.json
-python3.6 autocrackeo.py -m 1000 hashes\test_only_hash_format.hash --config config\one_word_per_hash.json
-python3.6 autocrackeo.py -m 1000 hashes\test_user_hash_format.hash --config config\test.json
-python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\fast.json --just-results
+python3.6 autocrackeo.py -m "NTLM" hashes\test.hash -c config\quick_test.json
+python3.6 autocrackeo.py -m 1000 hashes\test.hash -c config\quick_test.json
+python3.6 autocrackeo.py -m 1000 hashes\test.hash -c config\fast.json
+python3.6 autocrackeo.py -m 1000 hashes\test.hash -c config\basic.json
+python3.6 autocrackeo.py -m 1000 hashes\test.hash -c config\full.json
+python3.6 autocrackeo.py -m 1000 hashes\test_user_hash_format.hash -c config\test.json -e=“--username”
+python3.6 autocrackeo.py -m 1000 hashes\test_only_hash_format.hash -c config\one_word_per_hash.json
+
+python3.6 autocrackeo.py -m 1000 hashes\test.hash -c config\quick_test.json -e=“--username” --just-results
 ```
 
 ## Organización
@@ -88,4 +86,4 @@ El proyecto está dividido por directorios de distintos recursos. Aunque en ning
 	* Tutorial de crackeo (para hashcat).md: aquí he reunido los conceptos y ejemplos del hashcat que me han sido de utilidad para realizar este proyecto.
 
 ## Autora
-* **Eneritz Azqueta** → proyecto realizado como becaria de Auditoría en **S21sec**
+* **Eneritz Azqueta** → proyecto realizado como Auditora en **S21sec**

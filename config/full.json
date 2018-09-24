@@ -5,37 +5,42 @@
 		"masks_dir": "masks",
 		"results_dir": "results"
 	},
-	"parameters": {
-		"executable": "hashcat64.exe",
-		"extra_params": "",
-		"resources": {
-			"resource_level": "low",
-			"resource_low": "--force",
-			"resource_high": "-w 3"
-		},
+	"files": {
 		"wordlists_files": [
 			"custom.dic",
 			"cracked.dic",
 			"super.dic",
+			"rockyou.dic",
 			"*"
 		],
 		"rules_files": [
-			"rules_basic.rule"
+			"full.rule",
+			"best64.rule",
+			"hob064.rule",
+			"OneRuleToRuleThemAll.rule",
+			"T0XlC.rule"
 		],
 		"masks_files": [
-			"masks_full.hcmask"
+			"full.hcmask",
+			"2015-Top40-Time-Sort.hcmask",
+			"full_hybrid.hcmask"
 		]
 	},
 	"attacks" : {
 		"straight": [
-			{"wordlists": [3]}
+			{"wordlists": [4]}
 		],
 		"straight_with_rules_manual": [
 		],
 		"straight_with_rules_files": [
+			{"wordlists": [3], "rules": [1]},
+			{"wordlists": [3], "rules": [2]},
+			{"wordlists": [0,1,2], "rules": [3]},
+			{"wordlists": [0,1,2], "rules": [4]}
 		],
 		"straight_with_combined_rules_files": [
-			{"wordlists": [0,1,2], "rules": [0,0]}
+			{"wordlists": [0,1], "rules": [0,0]},
+			{"wordlists": [0,1,2], "rules": [1,2]}
 		],
 		"combinator": [
 			{"wordlists": [0,0]},
@@ -45,33 +50,33 @@
 			{"wordlists": [0,2]},
 			{"wordlists": [2,0]},
 			{"wordlists": [2,2]}
-
 		],
 		"combinator_with_rules_manual": [
 			{"wordlists": [0,0], "rules_left": "c", "rules_right": "c"},
 			{"wordlists": [0,0], "rules_left": "c", "rules_right": "c$1"},
 			{"wordlists": [0,0], "rules_left": "c", "rules_right": "c$2$0$1$8"}
 		],
+		"hybrid_right_with_masks_files": [
+			{"wordlists": [0,1,2], "rules_left": "l", "masks": [2], "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0,1,2], "rules_left": "c", "masks": [2], "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0,1,2], "rules_left": "u", "masks": [2], "increment_enable": 1, "increment_min": 1, "increment_max": 4}
+		],
+		"hybrid_right_with_masks_manual": [
+		],
+		"hybrid_left_with_masks_files": [
+			{"wordlists": [0,1,2], "rules_right": "l", "masks": [2], "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0,1,2], "rules_right": "c", "masks": [2], "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0,1,2], "rules_right": "u", "masks": [2], "increment_enable": 1, "increment_min": 1, "increment_max": 4}
+		],
+		"hybrid_left_with_masks_manual": [
+		],
 		"brute_force_automatic": [
 		],
 		"brute_force_with_masks_manual": [
 		],
 		"brute_force_with_masks_files": [
-			{"masks": [0], "increment_enable": 1, "increment_min": 1, "increment_max": 15}
-		],
-		"hybrid_right_with_masks_files": [
-			{"wordlists": [0,1,2], "rules_left": "l", "masks": [0], "increment_enable": 1, "increment_min": 1, "increment_max": 10},
-			{"wordlists": [0,1,2], "rules_left": "c", "masks": [0], "increment_enable": 1, "increment_min": 1, "increment_max": 10},
-			{"wordlists": [0,1,2], "rules_left": "u", "masks": [0], "increment_enable": 1, "increment_min": 1, "increment_max": 10}
-		],
-		"hybrid_right_with_masks_manual": [
-		],
-		"hybrid_left_with_masks_files": [
-			{"wordlists": [0,1,2], "rules_right": "l", "masks": [0], "increment_enable": 1, "increment_min": 1, "increment_max": 5},
-			{"wordlists": [0,1,2], "rules_right": "c", "masks": [0], "increment_enable": 1, "increment_min": 1, "increment_max": 5},
-			{"wordlists": [0,1,2], "rules_right": "u", "masks": [0], "increment_enable": 1, "increment_min": 1, "increment_max": 5}
-		],
-		"hybrid_left_with_masks_manual": [
+			{"masks": [0], "increment_enable": 0, "increment_min": 1, "increment_max": 8},
+			{"masks": [1], "increment_enable": 0, "increment_min": 0, "increment_max": 0}
 		],
 		"one_word_per_hash":[
 		]

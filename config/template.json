@@ -12,10 +12,10 @@
 			"super.dic"
 		],
 		"rules_files": [
-			"fast.rule"
+			"basic.rule"
 		],
 		"masks_files": [
-			"fast_hybrid.hcmask"
+			"basic.hcmask"
 		]
 	},
 	"attacks" : {
@@ -24,12 +24,10 @@
 		"straight_with_rules_manual": [
 		],
 		"straight_with_rules_files": [
-			{"wordlists": [0,1,2], "rules": [0]}
 		],
 		"straight_with_combined_rules_files": [
 		],
 		"combinator": [
-			{"wordlists": [0,0]}
 		],
 		"combinator_with_rules_manual": [
 		],
@@ -40,12 +38,10 @@
 		"brute_force_with_masks_files": [
 		],
 		"hybrid_right_with_masks_files": [
-			{"wordlists": [0,1,2], "rules_left": ":", "masks": [0], "increment_enable": 1, "increment_min": 1, "increment_max": 4}
 		],
 		"hybrid_right_with_masks_manual": [
 		],
 		"hybrid_left_with_masks_files": [
-			{"wordlists": [0,1,2], "rules_right": ":", "masks": [0], "increment_enable": 1, "increment_min": 1, "increment_max": 4}
 		],
 		"hybrid_left_with_masks_manual": [
 		],

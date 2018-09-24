@@ -2,6 +2,7 @@
 try:
 	import os, sys, json, argparse
 	from src.color import Color
+	from src.configuration import Configuration
 	from src.attacks import Attacks
 	from src.hashcat import Hashcat
 	from src.results import Results
@@ -12,68 +13,14 @@ def get_arguments():
 	"""
 	 Manage input parameters
 	"""
-	parser = argparse.ArgumentParser(description="Automated Hashcat usage tool", epilog="Example: python3 autocrackeo.py -m 1000 hashes\\test.hash --config src\config.json")
-	cmd = parser.add_argument("-m", type=str, dest="hash_type", help="hashcat's hash type number, more info here: https://hashcat.net/wiki/doku.php?id=example_hashes", required=True)
+	parser = argparse.ArgumentParser(description="Automated Hashcat usage tool", epilog='Example: python3.6 autocrackeo.py -m 1000 hashes\\test.hash --config config\\quick_test.json --extra-params="--username"')
+	cmd = parser.add_argument("-m", type=str, dest="hash_type", help="hashcat's hash type number or its corresponding title, more info here: https://hashcat.net/wiki/doku.php?id=example_hashes", required=True)
 	parser.add_argument("hash_file", type=str,  help="path to the file with hashes to crack")
-	parser.add_argument("--config", type=str, dest="config_file", help="configuration json file to use with specific attacks", required=True)
-	parser.add_argument("--just-results", action='store_true', help="skips the attacks and just shows the results using the potfile")
-	parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+	parser.add_argument("-c", "--config", type=str, dest="config_file", help="configuration json file to use with specific attacks", required=True)
+	parser.add_argument("-e", "--extra-params", type=str, dest="extra_params", default="", help="extra params to add in the hashcat command", required=False)
+	parser.add_argument("-r", "--just-results", action='store_true', help="skips the attacks and just shows the results using the potfile")
+	parser.add_argument("-v", "--version", action='version', version='%(prog)s 1.0')
 	return parser.parse_args()
-
-class Configuration(object):
-	"""
-	 Gather all the information and configuration the program is going to use
-	"""
-	def __init__(self, hash_file, hash_type, config_file):
-		conf = None
-		try:
-			with open(os.path.join(config_file), "r") as f:
-				conf = json.load(f)
-
-			"""
-			 Load paths and parameters from config file
-			 And add the relative paths to the files to use
-			"""			
-			#static parameters
-			self.attacks = conf["attacks"]
-			self.paths = conf["paths"]
-			self.static_values = conf["parameters"]
-			self.wordlists, self.rules,self.masks = [], [], []
-
-			if self.static_values["resources"]["resource_level"] == "low":
-				self.static_values["resource_options"] = self.static_values["resources"]["resource_low"]
-			else:
-				self.static_values["resource_options"] = self.static_values["resources"]["resource_high"]
-			self.static_values["pot_file"] = os.path.join(self.paths["results_dir"], "potfile.pot")
-			self.static_values["out_file"] = os.path.join(self.paths["results_dir"], "plaintext_passwords.txt")
-			self.static_values["out_file_cracked"] = os.path.join(self.paths["results_dir"], "hashes_cracked.txt")
-			self.static_values["out_file_left"] = os.path.join(self.paths["results_dir"], "hashes_left.txt")
-			#self.static_values["report_file"] = os.path.join(self.paths["results_dir"], self.static_values["results_files"]["report_file"])
-
-			#path to the files
-			for wordlist in self.static_values["wordlists_files"]:
-				self.wordlists.append(os.path.join(self.paths["wordlists_dir"], wordlist))
-
-			for rules_file in self.static_values["rules_files"]:
-				self.rules.append(os.path.join(self.paths["rules_dir"], rules_file))
-
-			for masks_file in self.static_values["masks_files"]:
-				self.masks.append(os.path.join(self.paths["masks_dir"], masks_file))
-
-			# check that files exist
-			file_paths = self.wordlists + self.rules + self.masks
-			for file_path in file_paths:
-				f = os.path.isfile(file_path)
-
-			"""
-			 Load parameters from input arguments
-			"""
-			self.static_values["hash_type"] = hash_type
-			self.static_values["hash_file"] = hash_file
-			self.static_values["config_file"] = config_file
-
-		except Exception as e:
-			Color.show_error(e)
 
 if __name__ == "__main__":
 	"""
@@ -84,7 +31,7 @@ if __name__ == "__main__":
 	"""
 	os.system("") # enable command colors
 	arguments = get_arguments()
-	conf = Configuration(arguments.hash_file, arguments.hash_type, arguments.config_file)
+	conf = Configuration(arguments.hash_file, arguments.hash_type, arguments.config_file, arguments.extra_params)
 	results = Results(conf.static_values)
 	hashcat = Hashcat(conf.static_values, results)
 	attacks = Attacks(hashcat)
@@ -116,7 +63,7 @@ if __name__ == "__main__":
 	 Generate results files
 	 Show results on screen
 	"""
-	# SAVE
+	# SAVE --show and --left
 	hashcat.save_cracked()
 	hashcat.save_left()
 	

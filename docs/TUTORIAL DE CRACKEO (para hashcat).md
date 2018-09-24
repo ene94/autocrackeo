@@ -163,7 +163,7 @@ Custom charsets:
 
 Modo incremental: puedes abarcar de golpe casos como 0-9, 00-99, 000-999 y 0000-9999.
 Se puede utilizar la opción incremental, para que comience a probar fuerza bruta desde x caracteres y acabe cuando llegue a y caracteres: --increment/-i --increment-min/--increment-max.
-Si pones una máscara de tamaño 10 (?1?1?1?1?1?1?1?1?1?1 -1?d -i --increment-min 1 --imcrement-min 3), prevalece el increment y hará desde 0 hasta 999, por mucho que la máscara abarque más casos.
+Si pones una máscara de tamaño 10 (?1?1?1?1?1?1?1?1?1?1 -1?d -i --increment-min 1 --increment-min 3), prevalece el increment y hará desde 0 hasta 999, por mucho que la máscara abarque más casos.
 * --increment o -i: activa el modo incremental
 * --increment-min 1: emepzar por 1 caracter
 * --increment-max 4: parar en 4 caracteres
@@ -231,6 +231,9 @@ Algunas reglas útiles definidas en hashcat:
 * E toda la frase en minúsculas, pone mayúsculas la primera letra de la frase, y cada letra después de un espacio
 * eX lo mismo pero después de cada carácter X
 * xNM Extrae M caracteres emepzando por la posición N
+* D0 Elimina el caracter en la posición 0
+* [ Borra el primer caracter
+* ] Borra el último caracter
 
 Ejemplos:
 En wordlist.txt tendríamos el diccionario de palabras (por ejemplo: password)
@@ -244,6 +247,8 @@ En rule1.rule tendríamos las reglas, una por línea.
 * $1$7 --> password17
 * ^7^1 --> 17password (¡ojo al orden!)
 * c^.$s$1$7 --> .passwords17
+* [	assword
+* ]	--> passwor
 
 Se pueden insertar varios archivos de reglas y se ejecutarán en orden todas las combinaciones:
 wordlist.txt (password), rule1.rule (^1$1) y rule2.rule (^2$2)
@@ -254,7 +259,7 @@ wordlist.txt (password), rule1.rule (^1$1) y rule2.rule (^2$2)
 password12
 ```
 
-En los modos de ataque -a 1,6,7 se divide en lado derecho e izquierdo, por lo que al escribir la regla hay que indicar a cuál de ellos aplicarlo. En el caso de wordlist1 wordlist2 -j se aplicará al wordlist1, y las reglas de -k al wordlist2.
+En los modos de ataque -a 0,1,6,7 se divide en lado derecho e izquierdo, por lo que al escribir la regla hay que indicar a cuál de ellos aplicarlo. En el caso de wordlist1 wordlist2 -j se aplicará al wordlist1, y las reglas de -k al wordlist2.
 ```
 hashcat64.exe -m 0 -a 0 C:\hashes.txt C:\wordlist.txt -r C:\rule1.rule
 hashcat64.exe -m 0 -a 1 C:\hashes.txt C:\wordlist1.txt C:\wordlist2.txt -j c -k c$2$0$1$8
@@ -318,7 +323,9 @@ aad3b435b51404eeaad3b435b51404ee (LM)
 31d6cfe0d16ae931b73c59d7e0c089c0 (NTLM)
 
 ## Algo de john the ripper:
-
+```
+john.exe hashes.txt –w=wordlist.txt –pot=potfile.pot –format=NT
+```
 --show
 --wordlist=wordlist.txt / -w=wordlist.txt
 --pot=john.pot

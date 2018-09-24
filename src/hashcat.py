@@ -21,9 +21,10 @@ class Hashcat(object):
 		self.hash_file = conf["hash_file"]
 		self.pot_file = "--potfile-path " + conf["pot_file"]
 		self.out_file = "-o " + conf["out_file"]
-		self.out_file_format = "--outfile-format 2"# contraseñas en claro
+		self.out_file_format_pwd = "--outfile-format 2"# only plaintext password
+		self.out_file_format_hash = "--outfile-format 1"# only hash
 		self.resource_options = conf["resource_options"]
-		self.extra_params = conf["extra_params"]
+		self.extra_params = conf["extra_params"] or ""
 		self.quiet = "--quiet"
 
 		# dynamic params
@@ -47,7 +48,7 @@ class Hashcat(object):
 		"""
 		Return a string containing hashcat commands' static parameters
 		"""
-		return f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file} {self.out_file_format} {self.resource_options} {self.extra_params} {self.quiet} "
+		return f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file} {self.out_file_format_pwd} {self.resource_options} {self.extra_params} {self.quiet} "
 
 	def execute(self, cmd):
 		"""
@@ -193,35 +194,18 @@ class Hashcat(object):
 		Call hashcat's brute force automatic attack: "hash" -a 3 "specific_word"
 		"""
 		attack_mode = self.attack_mode.format(mode=3)
-		static = f"{self.executable} {self.hash_type} \"{one_hash}\" {self.pot_file} {self.out_file} {self.out_file_format} {self.resource_options} {self.extra_params} {self.quiet} "
+		static = f"{self.executable} {self.hash_type} \"{one_hash}\" {self.pot_file} {self.out_file} {self.out_file_format_pwd} {self.resource_options} {self.extra_params} {self.quiet} "
 		attack = "{attack_mode} {masks}".format(attack_mode=attack_mode, masks=word)
 		cmd = static + attack
 		self.execute(cmd)
-		return
-
-	def show_cracked(self):
-		"""
-		 Call hashcat's show command to print the cracked hashes from a given hashfile, hashtype and potfile
-		"""
-		cmd = f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file_format} {self.resource_options} {self.extra_params} {self.show}"
-		print(Color.cyan("\n" + cmd))
-		p = subprocess.call(cmd, shell=True)
-		return
-
-	def show_left(self):
-		"""
-		 Call hashcat's left command to print the NOT cracked hashes from a given hashfile, hashtype and potfile
-		"""
-		cmd = f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} --outfile-format 1 {self.resource_options} {self.extra_params} {self.left}"
-		print(Color.cyan("\n" + cmd))
-		p = subprocess.call(cmd, shell=True)
 		return
 
 	def save_cracked(self):
 		"""
 		 Call hashcat's show command and save the cracked hashes from a given hashfile, hashtype and potfile
 		"""
-		cmd = f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file_format} {self.resource_options} {self.extra_params} {self.show}"
+		cmd = f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file_format_pwd} {self.extra_params} {self.show}"
+		print(Color.cyan("\n" + cmd))
 		f = open(self.results.out_file_cracked_path, 'w')
 		p = subprocess.call(cmd, stdout=f, shell=True)
 		f.close()
@@ -233,7 +217,8 @@ class Hashcat(object):
 		"""
 		 Call hashcat's left command and save the NOT cracked hashes from a given hashfile, hashtype and potfile
 		"""
-		cmd = f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} --outfile-format 1 {self.resource_options} {self.extra_params} {self.left}"
+		cmd = f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file_format_hash} {self.extra_params} {self.left}"
+		print(Color.cyan("\n" + cmd))
 		f = open(self.results.out_file_left_path, 'w')
 		p = subprocess.call(cmd, stdout=f, shell=True)
 		f.close()

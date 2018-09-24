@@ -16,14 +16,18 @@
 		* out_file_left=hashes_left.txt: user:hash sin crackear
 	* añadir opción de ataque one_word_per_hash --> ¿hashlist[i] == hash(wordlist[i])? (línea a línea)
 
+# Hecho, a falta de subirlo a github
+* añadir archivos conocidos de hashes, reglas, máscaras y diccionarios.
+* cambiar el orden de los ataques pasando la fuerza bruta al último lugar. En realidad depende del orden en el que se escriba el archivo de configuración.
+* mover la configuración de entorno (executable,resources) a un único fichero "host-config.json", fuera de los config.json.
+* mover la opción de añadir parámetros extra del hashcat como argumentos de entrada --extra-params="--username", en lugar de en los archivos config.json.
+* actualizar los archivos de ejemplos de configuración y READMEs acorde a los cambios.
+* Añadir búsqueda rápida de tipos de hash, para introducir "NTLM" en lugar de "1000", por ejemplo.
+
 # En proceso
-* Añadir búsqueda rápida de tipos de hash, para introducir "ntlm" en lugar de "1000", por ejemplo.
-* Hacer más amigable el uso de diferentes formatos de hashes
 
 # TODO
 * comprobaciones de existencia de ficheros...
-* report.json: generar un informe con los resultados básicos de la ejecución
-* añadir opción para ordenar la ejecución de los ataques
 * omitir la salida en pantalla del hashcat y simplificarla al máximo. Ideas:
 	* simple barra de progreso
 	* notificación de hashes crackeados
@@ -32,18 +36,6 @@
 	* tiempo de ejecución
 	* patrones encontrados...
 * añadir funcionalidad de guardar y restaurar sessiones
-
-# Para mejorar
-* analizar la efectividad de los comandos enviados al hashcat y optimizar el uso de los mismos
-* generar archivos de diccionarios, reglas, máscaras que optimicen el funcionamiento
-	* diccionarios representativos
-	* reglas/máscaras especializadas para diferentes tipos de ataque
-	* reglas generadas tras el análisis de las contraseñas que se van crackeando
-	* máscaras que engloben varias reglas y se ejecuten en un tiempo adecuado
-	* añadir archivos conocidos como:
-		* best64.rule
-		* d3ad0ne.rule
-		* T0XIC.rule
-		* rockyou.txt
-		* hashkiller.txt
-		* default.txt
+* añadir más diccionarios interesantes:
+	* hashkiller.txt
+	* default.txt
