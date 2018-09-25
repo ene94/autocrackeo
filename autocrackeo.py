@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 try:
 	import os, sys, json, argparse
+	version = str(sys.version_info[0]) + "." + str(sys.version_info[1])
+	if sys.version_info[0] < 3 or sys.version_info[1] < 6:
+	    sys.exit("Python version must be at least 3.6, current is " + version)
 	from src.color import Color
 	from src.configuration import Configuration
 	from src.attacks import Attacks
 	from src.hashcat import Hashcat
 	from src.results import Results
+
+
 except Exception as e:
 	sys.exit(e)
 
