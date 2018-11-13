@@ -1,4 +1,29 @@
 # Archivos de configuración:
+
+## Configuración general
+Especifica el path al ejecutable de hashcat, las opciones de rendimiento y rutas a los directorios.
+
+### host-config.json
+
+En el campo paths se especificará la ruta a los directorios en los cuales estarán situados los diccionarios, reglas, máscaras y resultados. Se puede indicar una ruta tanto relativa como absoluta, por ejemplo: "wordlists" o "C:\\tools\\wordlists". En el caso de que no se quiera utilizar esta organización de directorios, habrá que indicar las rutas hasta los directorios en los que se encuentren los recursos necesarios.
+```
+{
+	"executable": "hashcat64.exe",
+	"resources": {
+		"resource_level": "low",
+		"resource_low": "--force",
+		"resource_high": "-w 3"
+	},
+	"paths": {
+		"wordlists_dir": "wordlists",
+		"rules_dir": "rules",
+		"masks_dir": "masks",
+		"results_dir": "results"
+	}
+}
+```
+
+## Configuración personalizada de ataques secuenciales
 Para ejecutar el programa autocrackeo, se tiene que proporcionar un archivo de configuración como parámetro de entrada 
 ```
 --config config\test.json
@@ -9,17 +34,6 @@ Para ejecutar el programa autocrackeo, se tiene que proporcionar un archivo de c
 	* fast.json: configuración para una ejecución rápida con pocos intentos.
 	* basic.json: configuración para una ejecución básica, que en minutos/horas sea capaz de probar las contraseñas/reglas/máscaras más frecuentes.
 	* full.json: configuración para una ejecución más completa, puede tardar semanas, meses, años incluso. Además de probar las opciones básicas, añadirá reglas combinadas con diccionarios grandes, máscaras que abarquen más caracteres de fuerza bruta, etc.
-
-## Rutas
-En el campo paths se especificará la ruta a los directorios en los cuales estarán situados los diccionarios, reglas, máscaras y resultados. Se puede indicar una ruta tanto relativa como absoluta, por ejemplo: "wordlists" o "C:\\tools\\wordlists". En el caso de que no se quiera utilizar esta organización de directorios, habrá que indicar las rutas hasta los directorios en los que se encuentren los recursos necesarios.
-```
-"paths": {
-	"wordlists_dir": "wordlists",
-	"rules_dir": "rules",
-	"masks_dir": "masks",
-	"results_dir": "results"
-}
-```
 
 ## Parámetros
 Se debe indicar la lista de archivos (diccionarios, reglas, máscaras) que se quieran utilizar.
@@ -144,5 +158,6 @@ Cada línea se corresponde con un ataque a ejecutar:
 ```
 
 ## Ejemplo:
+* template.json es un archivo de configuración de ataques vacío para utilizarlo de plantilla cuando se quiera crear una nueva configuración personalizada.
 * test.json es únicamente para ver un ejemplo de cada tipo, gran parte de los ataques están repetidos con opciones diferentes. Servirá como guía para construir un nuevo config.json personalizado.
-* fast.json, basic.json y full.json son algunos archivos preparados para utilizarse tal cual, dependiendo de la complejidad que se quiera.
+* quick_test.json, fast.json, basic.json y full.json son algunos archivos preparados para utilizarse tal cual, dependiendo de la complejidad que se quiera.

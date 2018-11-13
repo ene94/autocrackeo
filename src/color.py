@@ -38,3 +38,12 @@ class Color:
 		filename = f.f_code.co_filename
 		print(Color.red("ERROR: " + filename + " in line: " + str(lineno) + " " + str(e)))
 		sys.exit()
+
+	@staticmethod
+	def show_error_text(text):
+		"""
+		Show custom error message
+		"""
+		print(Color.red("ERROR: " + text))
+		sys.exit()
+

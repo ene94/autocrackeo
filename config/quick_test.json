@@ -1,10 +1,4 @@
 {
-	"paths": {
-		"wordlists_dir": "wordlists",
-		"rules_dir": "rules",
-		"masks_dir": "masks",
-		"results_dir": "results"
-	},
 	"files": {
 		"wordlists_files": [
 			"cracked.dic",

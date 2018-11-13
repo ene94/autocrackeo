@@ -4,5 +4,11 @@
 		"resource_level": "low",
 		"resource_low": "--force",
 		"resource_high": "-w 3"
+	},
+	"paths": {
+		"wordlists_dir": "wordlists",
+		"rules_dir": "rules",
+		"masks_dir": "masks",
+		"results_dir": "results"
 	}
 }

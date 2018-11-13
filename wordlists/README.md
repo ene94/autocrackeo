@@ -7,3 +7,8 @@
 
 * rockyou.txt: diccionario de contraseñas reales en claro
 	* http://downloads.skullsecurity.org/passwords/rockyou.txt.bz2
+
+* se pueden añadir más diccionarios interesantes como:
+	* hashkiller: https://hashkiller.co.uk/downloads.aspx
+	* default passwords
+	* ...

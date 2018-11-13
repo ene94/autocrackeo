@@ -20,8 +20,8 @@ class Hashcat(object):
 		self.hash_type = "-m " + conf["hash_type"]
 		self.hash_file = conf["hash_file"]
 		self.pot_file = "--potfile-path " + conf["pot_file"]
-		self.out_file = "-o " + conf["out_file"]
-		self.out_file_format_pwd = "--outfile-format 2"# only plaintext password
+		#self.out_file = "-o " + conf["out_file"]
+		self.out_file_format_pwd = "--outfile-format 3"# hash:pwd
 		self.out_file_format_hash = "--outfile-format 1"# only hash
 		self.resource_options = conf["resource_options"]
 		self.extra_params = conf["extra_params"] or ""
@@ -48,7 +48,7 @@ class Hashcat(object):
 		"""
 		Return a string containing hashcat commands' static parameters
 		"""
-		return f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file} {self.out_file_format_pwd} {self.resource_options} {self.extra_params} {self.quiet} "
+		return f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file_format_pwd} {self.resource_options} {self.extra_params} {self.quiet} "
 
 	def execute(self, cmd):
 		"""
@@ -56,7 +56,6 @@ class Hashcat(object):
 		"""
 		print(Color.cyan("\n" + cmd))
 		p = subprocess.call(cmd, shell=True)
-		self.results.save_attack(cmd)
 
 		'''
 		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
@@ -211,8 +210,10 @@ class Hashcat(object):
 		f.close()
 		count = self.results.count_lines(self.results.out_file_cracked_path)
 		self.results.cracked_total = count
+		print("Cracked hashes saved in " + self.results.out_file_cracked_path + " ...")
 		return 
 
+	'''
 	def save_left(self):
 		"""
 		 Call hashcat's left command and save the NOT cracked hashes from a given hashfile, hashtype and potfile
@@ -225,3 +226,4 @@ class Hashcat(object):
 		count = self.results.count_lines(self.results.out_file_left_path)
 		self.results.cracked_left = count
 		return
+	'''

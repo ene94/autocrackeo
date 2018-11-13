@@ -16,18 +16,21 @@
 		* out_file_left=hashes_left.txt: user:hash sin crackear
 	* añadir opción de ataque one_word_per_hash --> ¿hashlist[i] == hash(wordlist[i])? (línea a línea)
 
-# Hecho, a falta de subirlo a github
-* añadir archivos conocidos de hashes, reglas, máscaras y diccionarios.
-* cambiar el orden de los ataques pasando la fuerza bruta al último lugar. En realidad depende del orden en el que se escriba el archivo de configuración.
-* mover la configuración de entorno (executable,resources) a un único fichero "host-config.json", fuera de los config.json.
-* mover la opción de añadir parámetros extra del hashcat como argumentos de entrada --extra-params="--username", en lugar de en los archivos config.json.
-* actualizar los archivos de ejemplos de configuración y READMEs acorde a los cambios.
-* Añadir búsqueda rápida de tipos de hash, para introducir "NTLM" en lugar de "1000", por ejemplo.
+* 25/09/2018:
+	* añadir archivos conocidos de hashes, reglas, máscaras y diccionarios.
+	* cambiar el orden de los ataques pasando la fuerza bruta al último lugar. En realidad depende del orden en el que se escriba el archivo de configuración.
+	* mover la configuración de entorno (executable,resources) a un único fichero "host-config.json", fuera de los config.json.
+	* mover la opción de añadir parámetros extra del hashcat como argumentos de entrada --extra-params="--username" o -e="--username", en lugar de en los archivos config.json.
+	* actualizar los archivos de ejemplos de configuración y READMEs acorde a los cambios.
+	* Añadir búsqueda rápida de tipos de hash, para introducir "NTLM" en lugar de "1000", por ejemplo.
 
 # En proceso
+* simplificar la obtención de resultados: mostrar en pantalla sólo comando del hashcat + crackeados al instante, generar archivos con el nombre del hashlist y contenido usuario:contraseña en un directorio concreto al usar -r o --results
+* posibilidad de saltarse la secuencia de ataques y pasar directamente a los resultados con las teclas "Ctrl+c"
+* se ha movido la definición de los directorios base de cada archivo de configuración de ataques, al archivo de configuración general host-conf.json
+* comprobaciones de existencia de ficheros necesarios
 
 # TODO
-* comprobaciones de existencia de ficheros...
 * omitir la salida en pantalla del hashcat y simplificarla al máximo. Ideas:
 	* simple barra de progreso
 	* notificación de hashes crackeados

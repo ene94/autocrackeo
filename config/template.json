@@ -1,21 +1,10 @@
 {
-	"paths": {
-		"wordlists_dir": "wordlists",
-		"rules_dir": "rules",
-		"masks_dir": "masks",
-		"results_dir": "results"
-	},
 	"files": {
 		"wordlists_files": [
-			"custom.dic",
-			"cracked.dic",
-			"super.dic"
 		],
 		"rules_files": [
-			"basic.rule"
 		],
 		"masks_files": [
-			"basic.hcmask"
 		]
 	},
 	"attacks" : {

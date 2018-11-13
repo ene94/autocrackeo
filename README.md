@@ -19,6 +19,12 @@ Probado en windows/linux con python 3.6.3
 		"resource_level": "low",
 		"resource_low": "--force",
 		"resource_high": "-w 3"
+	},
+	"paths": {
+		"wordlists_dir": "wordlists",
+		"rules_dir": "rules",
+		"masks_dir": "masks",
+		"results_dir": "results"
 	}
 }
 ```
@@ -30,7 +36,7 @@ python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.jso
 ```
 Sólo ver los resultados:
 ```
-python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json --extra-params="--username" --just-results
+python3.6 autocrackeo.py -m 1000 hashes\test.hash --config config\quick_test.json --extra-params="--username" --results
 ```
 
 ### Personalización
@@ -57,6 +63,31 @@ Nota: El tiempo que tarde dependerá de muchos factores como el número de hashe
 
 ### Ayuda
 Para ver todas las opciones: `python3.6 autocrackeo.py -h`
+```
+usage: autocrackeo.py [-h] -m HASH_TYPE [-e EXTRA_PARAMS] [-c CONFIG_FILE]
+                      [-r]
+                      hash_file
+
+Automated Hashcat usage tool
+
+positional arguments:
+  hash_file             path to the file with hashes to crack
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -m HASH_TYPE          hashcat's hash type number or its corresponding title,
+                        more info here:
+                        https://hashcat.net/wiki/doku.php?id=example_hashes
+  -e EXTRA_PARAMS, --extra-params EXTRA_PARAMS
+                        extra params to add in the hashcat command
+  -c CONFIG_FILE, --config CONFIG_FILE
+                        configuration (json) file to use with specific attacks
+  -r, --results         shows a summary of the results and saves them to a
+                        file using the potfile
+
+Example: python3.6 autocrackeo.py -m 1000 hashes\test.hash -c
+config\quick_test.json -e="--username" -r
+```
 
 ### Ejemplos
 ```
@@ -68,7 +99,7 @@ python3.6 autocrackeo.py -m 1000 hashes\test.hash -c config\full.json
 python3.6 autocrackeo.py -m 1000 hashes\test_user_hash_format.hash -c config\test.json -e=“--username”
 python3.6 autocrackeo.py -m 1000 hashes\test_only_hash_format.hash -c config\one_word_per_hash.json
 
-python3.6 autocrackeo.py -m 1000 hashes\test.hash -c config\quick_test.json -e=“--username” --just-results
+python3.6 autocrackeo.py -m 1000 hashes\test.hash -e=“--username” -r
 ```
 
 ## Organización
