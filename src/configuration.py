@@ -76,11 +76,14 @@ class Configuration(object):
 						self.masks.append(os.path.join(self.paths["masks_dir"], masks_file))
 
 					# check if files exist --> less important
+					# falla y se cierra al comparar wordlists\* porque obviamente no existe
+					"""
 					file_paths = self.wordlists + self.rules + self.masks
 					for file_path in file_paths:
 						exists = os.path.isfile(file_path)
 						if not exists:
 							Color.show_error_text("File {file_path} does not exist...".format(file_path=file_path))
+					"""
 
 			#pprint(self.static_values)# mostrar contenido del objeto
 
