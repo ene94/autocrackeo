@@ -1,0 +1,60 @@
+{
+	"files": {
+		"wordlists_files": [
+			"cracked.dic",
+			"custom.dic",
+			"default-passwords.txt",
+			"hashkiller-dict.txt",
+			"super.dic",
+			"rockyou.dic",
+			"kaonashi14M.txt",
+			"google-10000-english.dic"
+		],
+		"rules_files": [
+			"OneRuleToRuleThemAll.rule",
+			"basic.rule",
+			"fast.rule",
+			"full.rule",
+			"hob064.rule",
+			"toggles-lm-ntlm.rule"
+		],
+		"masks_files":[
+		]
+	},
+	"attacks" : {
+		"straight": [
+		],
+		"straight_with_rules_manual": [
+		],
+		"straight_with_rules_files": [
+			{"wordlists": [], "rules": [0]},
+			{"wordlists": [], "rules": [1]},
+			{"wordlists": [], "rules": [2]},
+			{"wordlists": [], "rules": [3]},
+			{"wordlists": [], "rules": [4]},
+			{"wordlists": [], "rules": [5]}
+		],
+		"straight_with_combined_rules_files": [
+		],
+		"combinator": [
+		],
+		"combinator_with_rules_manual": [
+		],
+		"hybrid_right_with_masks_files": [
+		],
+		"hybrid_right_with_masks_manual": [
+		],
+		"hybrid_left_with_masks_files": [
+		],
+		"hybrid_left_with_masks_manual": [
+		],
+		"brute_force_automatic": [
+		],
+		"brute_force_with_masks_manual": [
+		],
+		"brute_force_with_masks_files": [
+		],
+		"one_word_per_hash":[
+		]
+	}
+}

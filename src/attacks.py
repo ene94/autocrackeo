@@ -175,5 +175,5 @@ class Attacks():
 						one_word = word_lines[i] # its line corresponding hash:word
 						self.hashcat.one_hash_one_word(one_hash,one_word)
 				else:
-					print(Color.show_error_text("Hash file and Wordlist file need same length to try hash[i]:word[i]"))
+					Color.show_error_text("Hash file and Wordlist file need same length to try hash[i]:word[i]", True)
 		return

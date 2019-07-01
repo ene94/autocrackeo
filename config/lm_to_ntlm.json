@@ -4,13 +4,14 @@
 			"custom.dic"
 		],
 		"rules_files": [
+			"toggles-lm-ntlm.rule"
 		],
 		"masks_files": [
 		]
 	},
 	"attacks" : {
-		"one_word_per_hash":[
-			{"wordlists": [0]}
+		"straight_with_rules_files": [
+			{"wordlists": [0], "rules": [0]}
 		]
 	}
 }

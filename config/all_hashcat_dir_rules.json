@@ -1,0 +1,41 @@
+{
+	"files": {
+		"wordlists_files": [
+			"custom.dic",
+			"*"
+		],
+		"rules_files": [
+			"D:\\hashcat-5.1.0\\rules\\Incisive-leetspeak.rule",
+			"D:\\hashcat-5.1.0\\rules\\InsidePro-HashManager.rule",
+			"D:\\hashcat-5.1.0\\rules\\InsidePro-PasswordsPro.rule",
+			"D:\\hashcat-5.1.0\\rules\\T0XlC-insert_00-99_1950-2050_toprules_0_F.rule",
+			"D:\\hashcat-5.1.0\\rules\\T0XlC-insert_space_and_special_0_F.rule",
+			"D:\\hashcat-5.1.0\\rules\\T0XlC-insert_top_100_passwords_1_G.rule",
+			"D:\\hashcat-5.1.0\\rules\\T0XlC.rule",
+			"D:\\hashcat-5.1.0\\rules\\T0XlCv1.rule",
+			"D:\\hashcat-5.1.0\\rules\\best64.rule",
+			"D:\\hashcat-5.1.0\\rules\\combinator.rule",
+			"D:\\hashcat-5.1.0\\rules\\d3ad0ne.rule",
+			"D:\\hashcat-5.1.0\\rules\\dive.rule",
+			"D:\\hashcat-5.1.0\\rules\\generated.rule",
+			"D:\\hashcat-5.1.0\\rules\\generated2.rule",
+			"D:\\hashcat-5.1.0\\rules\\leetspeak.rule",
+			"D:\\hashcat-5.1.0\\rules\\oscommerce.rule",
+			"D:\\hashcat-5.1.0\\rules\\rockyou-30000.rule",
+			"D:\\hashcat-5.1.0\\rules\\specific.rule",
+			"D:\\hashcat-5.1.0\\rules\\toggles1.rule",
+			"D:\\hashcat-5.1.0\\rules\\toggles2.rule",
+			"D:\\hashcat-5.1.0\\rules\\toggles3.rule",
+			"D:\\hashcat-5.1.0\\rules\\toggles4.rule",
+			"D:\\hashcat-5.1.0\\rules\\toggles5.rule",
+			"D:\\hashcat-5.1.0\\rules\\unix-ninja-leetspeak.rule"
+		],
+		"masks_files": [
+		]
+	},
+	"attacks" : {
+		"straight_with_rules_files": [
+			{"wordlists": [], "rules": []}
+		]
+	}
+}

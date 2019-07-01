@@ -1,0 +1,32 @@
+{
+	"files": {
+		"wordlists_files": [
+			"kaonashi14M.txt",
+			"custom.dic",
+			"*"
+		],
+		"rules_files": [
+			"haku34K.rule",
+			"kamaji34K.rule",
+			"yubaba64.rule"
+		],
+		"masks_files": [
+			"kaonashi.hcmask"
+		]
+	},
+	"attacks" : {
+		"straight": [
+			{"wordlists": [0]}
+		],
+		"straight_with_rules_files": [
+			{"wordlists": [], "rules": [0]},
+			{"wordlists": [], "rules": [1]},
+			{"wordlists": [], "rules": [2]}
+		],
+		"straight_with_combined_rules_files": [
+		],
+		"brute_force_with_masks_files": [
+			{"masks": [0], "increment_enable": 0, "increment_min": 0, "increment_max": 0}
+		]
+	}
+}

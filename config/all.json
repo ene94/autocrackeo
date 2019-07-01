@@ -1,0 +1,14 @@
+{
+	"config_files": [
+		"quick_test.json",
+		"fast.json",
+		"basic.json",
+		"kaonashi.json",
+		"full.json",
+		"some_wordlists_and_rules.json",
+		"all_custom.json",
+		"all_hashcat_dir_rules.json",
+		"all_custom_insane.json",
+		"brute_force_forever.json"
+	]
+}

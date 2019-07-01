@@ -39,8 +39,13 @@ https://hashcat.net/wiki/doku.php?id=example_hashes
 	* $6$52450745$k5ka2p8bFuSmoVT1tzOyyuaREkkKBcCNqoDKzYiJL9RaE8yMnPgh2XzzF0NDrUhgrcLwg78xs1w5pJiypEdFX/
 
 * 2100 = Domain Cached Credentials 2 (DCC2), MS Cache 2
-	* $DCC2$10240#user#hash --> para que hascat lo reconozca formatear a hash:user
-	* $DCC2$10240#tom#e4e938d12fe5974dc42a90120bd9c90f
+	* $DCC2$10240#user#hash --> $DCC2$10240#tom#e4e938d12fe5974dc42a90120bd9c90f
+	https://openwall.info/wiki/john/MSCash2
+	https://webstersprodigy.net/2014/02/03/mscash-hash-primer-for-pentesters/
+
+* 2500 = WPA/WPA2
+	* extraer handshakes de una captura utilizando hashcat-utils:
+	cap2hccapx captura-wifi.cap handshakes.hash SSID_wifi_a_crackear
 
 * 3000 = LM → max length = 14 (las parte de 7 en 7)
 	* user:permission:lmhash:nthash:::
@@ -57,13 +62,22 @@ https://hashcat.net/wiki/doku.php?id=example_hashes
 	* u4-netntlm::kNS:338d08f8e26de93300000000000000000000000000000000:9526fb8c23a90751cdd619b6cea564742e1e4bf33006ba41:cb8086049ec4736c
 
 * 5600 = NetNTLMv2
+	* usuario::dominio:server-challenge:NT-hash:client-challenge-response
 	* admin::N46iSNekpT:08ca45b7d7ea58ee:88dcbe4446168966a153a0064958dac6:5c7830315c7830310000000000000b45c67103d07d7b95acd12ffa11230e0000000052920b85f78d013c31cdb3b92f5d765c783030
 
 * 7300 = IPMI2 RAKP HMAC-SHA1
 	* b7c2d6f13a43dce2e44ad120a9cd8a13d0ca23f0414275c0bbe1070d2d1299b1c04da0f1a0f1e4e2537300263a2200000000000000000000140768617368636174:472bdabe2d5d4bffd6add7b3ba79a291d104a9ef
 
+* 9400 = Office 2007
+	* http://stuffjasondoes.com/2018/07/18/cracking-microsoft-office-document-passwords-for-free-using-hashcat/
+
+* 13100	= Kerberos 5 TGS-REP etype 23
+	* $krb5tgs$23$*user$realm$test/spn*$63386d22d359fe42230300d56852c...
+
 * 13400 = KeePass 1 (AES/Twofish) and KeePass 2 (AES)
 	* $keepass$*1*50000*0*3757...
+	* NewDatabase:$keepass$*1*50000*0*3757... --> hay que añadir la opción --username
+
 
 Nota: hay casos en los que no hace falta poner el usuario (MD5, bcrypt...) y para que no falle le tienes que indicar que además del hash le estás dando el usuario:
 	* username:hash con la opción --username

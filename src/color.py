@@ -40,10 +40,11 @@ class Color:
 		sys.exit()
 
 	@staticmethod
-	def show_error_text(text):
+	def show_error_text(text, exit):
 		"""
 		Show custom error message
 		"""
 		print(Color.red("ERROR: " + text))
-		sys.exit()
+		if exit:
+			sys.exit()
 

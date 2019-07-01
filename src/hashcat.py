@@ -10,7 +10,7 @@ class Hashcat(object):
 	Communicate with hashcat to execute commands
 	Usage: hashcat [options]... hash|hashfile|hccapxfile [dictionary|mask|directory]...
 	"""
-	def __init__(self, conf, results):
+	def __init__(self, conf):
 		"""
 		Storage for all posible parameters used by hashcat commands
 		"""
@@ -19,9 +19,9 @@ class Hashcat(object):
 		self.executable = conf["executable"]
 		self.hash_type = "-m " + conf["hash_type"]
 		self.hash_file = conf["hash_file"]
-		self.pot_file = "--potfile-path " + conf["pot_file"]
+		self.pot_file = "--potfile-path \"" + conf["pot_file"] + "\""
 		#self.out_file = "-o " + conf["out_file"]
-		self.out_file_format_pwd = "--outfile-format 3"# hash:pwd
+		self.out_file_format_pwd = "--outfile-format 2"# 2 pwd o 3 hash:pwd # si se añade --username será user:hash:pwd
 		self.out_file_format_hash = "--outfile-format 1"# only hash
 		self.resource_options = conf["resource_options"]
 		self.extra_params = conf["extra_params"] or ""
@@ -42,13 +42,13 @@ class Hashcat(object):
 		"""
 		To save results when hashcat is called
 		"""
-		self.results = results
+		self.out_file_cracked_path = conf["out_file_cracked"]
 
 	def getStaticPart(self):
 		"""
 		Return a string containing hashcat commands' static parameters
 		"""
-		return f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file_format_pwd} {self.resource_options} {self.extra_params} {self.quiet} "
+		return f"{self.executable} {self.hash_type} \"{self.hash_file}\" {self.pot_file} {self.out_file_format_pwd} {self.resource_options} {self.extra_params} {self.quiet} "
 
 	def execute(self, cmd):
 		"""
@@ -71,7 +71,7 @@ class Hashcat(object):
 		Call hashcat's straight attack: -a 0
 		"""
 		attack_mode = f"{self.attack_mode}".format(mode=0)
-		attack = "{attack_mode} {wordlist}".format(attack_mode=attack_mode, wordlist=wordlist)
+		attack = "{attack_mode} \"{wordlist}\"".format(attack_mode=attack_mode, wordlist=wordlist)
 		cmd = self.getStaticPart() + attack
 		self.execute(cmd)
 		return
@@ -82,7 +82,7 @@ class Hashcat(object):
 		"""
 		attack_mode = self.attack_mode.format(mode=0)
 		rules_left = self.rules_left.format(rules_left=rules_manual)
-		attack = "{attack_mode} {wordlist} {rules_left}".format(attack_mode=attack_mode, wordlist=wordlist, rules_left=rules_left)
+		attack = "{attack_mode} \"{wordlist}\" {rules_left}".format(attack_mode=attack_mode, wordlist=wordlist, rules_left=rules_left)
 		cmd = self.getStaticPart() + attack
 		self.execute(cmd)
 		return
@@ -93,7 +93,7 @@ class Hashcat(object):
 		"""
 		attack_mode = self.attack_mode.format(mode=0)
 		rules_file = self.rules_file.format(rules_file=rules_file)
-		attack = "{attack_mode} {wordlist} {rules_file}".format(attack_mode=attack_mode, wordlist=wordlist, rules_file=rules_file)
+		attack = "{attack_mode} \"{wordlist}\" {rules_file}".format(attack_mode=attack_mode, wordlist=wordlist, rules_file=rules_file)
 		cmd = self.getStaticPart() + attack
 		self.execute(cmd)
 		return
@@ -105,7 +105,7 @@ class Hashcat(object):
 		attack_mode = self.attack_mode.format(mode=0)
 		rules_file1 = self.rules_file.format(rules_file=rules_file1)
 		rules_file2 = self.rules_file.format(rules_file=rules_file2)
-		attack = "{attack_mode} {wordlist} {rules_file1} {rules_file2}".format(attack_mode=attack_mode, wordlist=wordlist, rules_file1=rules_file1, rules_file2=rules_file2)
+		attack = "{attack_mode} \"{wordlist}\" {rules_file1} {rules_file2}".format(attack_mode=attack_mode, wordlist=wordlist, rules_file1=rules_file1, rules_file2=rules_file2)
 		cmd = self.getStaticPart() + attack
 		self.execute(cmd)
 		return
@@ -117,7 +117,7 @@ class Hashcat(object):
 		attack_mode = self.attack_mode.format(mode=1)
 		rules_left = self.rules_left.format(rules_left=rules_left)
 		rules_right = self.rules_right.format(rules_right=rules_right)
-		attack = "{attack_mode} {wordlist1} {wordlist2} {rules_left} {rules_right}".format(attack_mode=attack_mode, wordlist1=wordlist1, wordlist2=wordlist2, rules_left=rules_left, rules_right=rules_right)
+		attack = "{attack_mode} \"{wordlist1}\" \"{wordlist2}\" {rules_left} {rules_right}".format(attack_mode=attack_mode, wordlist1=wordlist1, wordlist2=wordlist2, rules_left=rules_left, rules_right=rules_right)
 		cmd = self.getStaticPart() + attack
 		self.execute(cmd)
 		return
@@ -161,12 +161,12 @@ class Hashcat(object):
 		attack_mode = self.attack_mode.format(mode=6)
 		rules_left = self.rules_left.format(rules_left=rules_left)
 		if increment_min==False and increment_max==False:
-			attack = "{attack_mode} {wordlist} {masks} {rules_left}".format(attack_mode=attack_mode, wordlist=wordlist, masks=masks, rules_left=rules_left)
+			attack = "{attack_mode} \"{wordlist}\" {masks} {rules_left}".format(attack_mode=attack_mode, wordlist=wordlist, masks=masks, rules_left=rules_left)
 		else:
 			increment = self.increment
 			increment_min = self.increment_min.format(min=increment_min)
 			increment_max = self.increment_max.format(max=increment_max)
-			attack = "{attack_mode} {wordlist} {masks} {rules_left} {increment} {increment_min} {increment_max}".format(attack_mode=attack_mode, wordlist=wordlist, rules_left=rules_left, masks=masks, increment=increment, increment_min=increment_min, increment_max=increment_max)
+			attack = "{attack_mode} \"{wordlist}\" {masks} {rules_left} {increment} {increment_min} {increment_max}".format(attack_mode=attack_mode, wordlist=wordlist, rules_left=rules_left, masks=masks, increment=increment, increment_min=increment_min, increment_max=increment_max)
 		cmd = self.getStaticPart() + attack
 		self.execute(cmd)
 		return
@@ -178,12 +178,12 @@ class Hashcat(object):
 		attack_mode = self.attack_mode.format(mode=7)
 		rules_right = self.rules_right.format(rules_right=rules_right)
 		if increment_min==False and increment_max==False:
-			attack = "{attack_mode} {masks} {wordlist} {rules_right}".format(attack_mode=attack_mode, wordlist=wordlist, masks=masks, rules_right=rules_right)
+			attack = "{attack_mode} {masks} \"{wordlist}\" {rules_right}".format(attack_mode=attack_mode, wordlist=wordlist, masks=masks, rules_right=rules_right)
 		else:
 			increment = self.increment
 			increment_min = self.increment_min.format(min=increment_min)
 			increment_max = self.increment_max.format(max=increment_max)
-			attack = "{attack_mode} {masks} {wordlist} {rules_right} {increment} {increment_min} {increment_max}".format(attack_mode=attack_mode, wordlist=wordlist, rules_right=rules_right, masks=masks, increment=increment, increment_min=increment_min, increment_max=increment_max)
+			attack = "{attack_mode} {masks} \"{wordlist}\" {rules_right} {increment} {increment_min} {increment_max}".format(attack_mode=attack_mode, wordlist=wordlist, rules_right=rules_right, masks=masks, increment=increment, increment_min=increment_min, increment_max=increment_max)
 		cmd = self.getStaticPart() + attack
 		self.execute(cmd)
 		return
@@ -203,27 +203,10 @@ class Hashcat(object):
 		"""
 		 Call hashcat's show command and save the cracked hashes from a given hashfile, hashtype and potfile
 		"""
-		cmd = f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file_format_pwd} {self.extra_params} {self.show}"
+		cmd = f"{self.executable} {self.hash_type} \"{self.hash_file}\" {self.pot_file} {self.out_file_format_pwd} {self.extra_params} {self.show}"
 		print(Color.cyan("\n" + cmd))
-		f = open(self.results.out_file_cracked_path, 'w')
+		f = open(self.out_file_cracked_path, 'w')
 		p = subprocess.call(cmd, stdout=f, shell=True)
 		f.close()
-		count = self.results.count_lines(self.results.out_file_cracked_path)
-		self.results.cracked_total = count
-		print("Cracked hashes saved in " + self.results.out_file_cracked_path + " ...")
-		return 
-
-	'''
-	def save_left(self):
-		"""
-		 Call hashcat's left command and save the NOT cracked hashes from a given hashfile, hashtype and potfile
-		"""
-		cmd = f"{self.executable} {self.hash_type} {self.hash_file} {self.pot_file} {self.out_file_format_hash} {self.extra_params} {self.left}"
-		print(Color.cyan("\n" + cmd))
-		f = open(self.results.out_file_left_path, 'w')
-		p = subprocess.call(cmd, stdout=f, shell=True)
-		f.close()
-		count = self.results.count_lines(self.results.out_file_left_path)
-		self.results.cracked_left = count
+		print("Cracked hashes saved in " + self.out_file_cracked_path + " ...")
 		return
-	'''

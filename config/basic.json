@@ -53,6 +53,9 @@
 		"brute_force_automatic": [
 		],
 		"brute_force_with_masks_manual": [
+			{"masks": "?d?d?d?d?d?d?d?d", "increment_enable": 1, "increment_min": 1, "increment_max": 8},
+			{"masks": "?u?u?u?u?u?u?u?u", "increment_enable": 1, "increment_min": 1, "increment_max": 8},
+			{"masks": "?l?l?l?l?l?l?l?l", "increment_enable": 1, "increment_min": 1, "increment_max": 8}
 		],
 		"brute_force_with_masks_files": [
 			{"masks": [1], "increment_enable": 0, "increment_min": 1, "increment_max": 1}

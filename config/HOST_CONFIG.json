@@ -1,0 +1,9 @@
+{
+	"executable": "hashcat64.exe",
+	"resources": {
+		"resource_level": "low_windows",
+		"resource_low_windows": "-D 1 -O",
+		"resource_low_kali": "--force -O",
+		"resource_high": "-w 3"
+	}
+}

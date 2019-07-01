@@ -1,0 +1,98 @@
+{
+	"files": {
+		"wordlists_files": [
+			"custom.dic",
+			"super.dic"
+		],
+		"rules_files": [
+			"OneRuleToRuleThemAll.rule",
+			"T0XlC.rule",
+			"basic.rule",
+			"best64.rule",
+			"d3ad0ne.rule",
+			"fast.rule",
+			"full.rule",
+			"hob064.rule",
+			"toggles-lm-ntlm.rule"
+		],
+		"masks_files": [
+			"basic_hybrid.hcmask",
+			"full_hybrid.hcmask"
+		]
+	},
+	"attacks" : {
+		"straight": [
+			{"wordlists": [0]}
+		],
+		"straight_with_rules_manual": [
+		],
+		"straight_with_rules_files": [
+			{"wordlists": [0], "rules": [0]},
+			{"wordlists": [0], "rules": [1]},
+			{"wordlists": [0], "rules": [2]},
+			{"wordlists": [0], "rules": [3]},
+			{"wordlists": [0], "rules": [4]},
+			{"wordlists": [0], "rules": [5]},
+			{"wordlists": [0], "rules": [6]},
+			{"wordlists": [0], "rules": [7]},
+			{"wordlists": [0], "rules": [8]}
+		],
+		"straight_with_combined_rules_files": [
+			{"wordlists": [0,0], "rules": [0,0]},
+			{"wordlists": [0,0], "rules": [3,7]}
+		],
+		"combinator": [
+			{"wordlists": [0,0]}
+		],
+		"combinator_with_rules_manual": [
+			{"wordlists": [0,0], "rules_left": "c", "rules_right": ":"},
+			{"wordlists": [0,0], "rules_left": "c", "rules_right": "$1"},
+			{"wordlists": [0,0], "rules_left": "c", "rules_right": "c"},
+			{"wordlists": [0,0], "rules_left": "c", "rules_right": "$1$2$3"},
+			{"wordlists": [0,0], "rules_left": "c", "rules_right": "$2$0$1$8"},
+			{"wordlists": [0,0], "rules_left": "c", "rules_right": "$2$0$1$9"},
+			{"wordlists": [0,1], "rules_left": "c", "rules_right": "^."},
+			{"wordlists": [0,1], "rules_left": "c", "rules_right": "^_"}
+		],
+		"hybrid_right_with_masks_files": [
+		],
+		"hybrid_right_with_masks_manual": [
+			{"wordlists": [0], "rules_left": "l", "masks": "-1?d?s ?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 2},
+			{"wordlists": [0], "rules_left": "c", "masks": "-1?d?s ?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 2},
+			{"wordlists": [0], "rules_left": "u", "masks": "-1?d?s ?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 2},
+			{"wordlists": [0], "rules_left": "l", "masks": "-1?s?d ?1?d?d?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_left": "c", "masks": "-1?s?d ?1?d?d?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_left": "u", "masks": "-1?s?d ?1?d?d?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_left": "[", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_left": "]", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_left": "]]", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_left": "]]]", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_left": "[[", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_left": "[[[", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4}
+		],
+		"hybrid_left_with_masks_files": [
+		],
+		"hybrid_left_with_masks_manual": [
+			{"wordlists": [0], "rules_right": "l", "masks": "-1?d?s ?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 2},
+			{"wordlists": [0], "rules_right": "c", "masks": "-1?d?s ?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 2},
+			{"wordlists": [0], "rules_right": "u", "masks": "-1?d?s ?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 2},
+			{"wordlists": [0], "rules_right": "l", "masks": "-1?s?d ?1d?d?d?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_right": "c", "masks": "-1?s?d ?1?d?d?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_right": "u", "masks": "-1?s?d ?1?d?d?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_right": "[", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_right": "]", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_right": "]]", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_right": "]]]", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_right": "[[", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4},
+			{"wordlists": [0], "rules_right": "[[[", "masks": "-1?a ?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 4}
+		],
+		"brute_force_automatic": [
+		],
+		"brute_force_with_masks_manual": [
+		],
+		"brute_force_with_masks_files": [
+		],
+		"one_word_per_hash":[
+		]
+	}
+}

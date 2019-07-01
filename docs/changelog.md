@@ -24,21 +24,42 @@
 	* actualizar los archivos de ejemplos de configuración y READMEs acorde a los cambios.
 	* Añadir búsqueda rápida de tipos de hash, para introducir "NTLM" en lugar de "1000", por ejemplo.
 
-# En proceso
-* simplificar la obtención de resultados: mostrar en pantalla sólo comando del hashcat + crackeados al instante, generar archivos con el nombre del hashlist y contenido usuario:contraseña en un directorio concreto al usar -r o --results
-* posibilidad de saltarse la secuencia de ataques y pasar directamente a los resultados con las teclas "Ctrl+c"
-* se ha movido la definición de los directorios base de cada archivo de configuración de ataques, al archivo de configuración general host-conf.json
-* comprobaciones de existencia de ficheros necesarios
+# En proceso --> No subido a github
+
+* 06/02/2019: v1.3
+	* simplificar la obtención de resultados: mostrar en pantalla sólo comando del hashcat + crackeados al instante, generar archivos con el nombre del hashlist y contenido usuario:contraseña en un directorio concreto al usar -r o --results
+	* posibilidad de saltarse la secuencia de ataques y pasar directamente a los resultados con las teclas "Ctrl+c"
+	* se ha movido la definición de los directorios base de cada archivo de configuración de ataques, al archivo de configuración general host-conf.json
+	* comprobaciones de existencia de ficheros necesarios
+	* eliminar posibilidad de elegir ruta a cada directorios, identifica la ruta del archivo de configuración con el parámetro -c, y utiliza como directorio base el directorio anterior.
+	* arreglado para que funcione también en windows, que te obliga a ejecutarlo desde el directorio del hashcat.
+	* se han añadido las configuraciones all_wordlists_all_rules.json, lm.json y ntlm_from_lm.json
+	* ejecutar en bucle un mismo ataque para varios archivos y tipos desde un archivo json con una lista de hash_file, hash_type y extra_params.
+	* eliminar innecesario texto con resultados.
+	* añadir elección de ruta a /results/ donde dejar el potfile y los resultados de la ejecución
+	* cambiar argumento -c para utilizar ruta relativa desde /autocrackeo/config/ con -c test.json o ruta absoluta C:\test\test.json
+	* añadir argumento de entrada par aelegir el path del archivo custom.dic a utilizar
+
+* 08/02/2019: v1.4
+	* añadir pathwell.hcmask mask to all_wordlists_all_rules.json
+	* opción -c "all" para que ejecute en secuencialmente cada archivo de configuración definido en el archivo all.json
+
+
+* 08/02/2019: v1.5
+	* cambios en las configuraciones para ajustar los tiempos de ejecución
+	* añadidos recursos y ataques del repositorio kaonashi de github
+
 
 # TODO
-* omitir la salida en pantalla del hashcat y simplificarla al máximo. Ideas:
+* OPCIÓN -q o --quiet --> quitar todos mis comentarios
+* crear archivo de configuración completo desde lo más básico a lo más complejo dedicado a diccionarios personalizados que vayan variando a lo largo del proyecto. Para una vez pasado lo básico (quick_test, fast, basic, full, all_wordlists_all_rules) repetir ataques sólo de custom.dic y sus combinaciones
+* revisar problemas con ", ' y espacios en el cmder
+* omitir la salida en pantalla del hashcat y simplificarla al máximo. Ideas: (esto puede ralentizar el programa...)
 	* simple barra de progreso
 	* notificación de hashes crackeados
-* generar un informe analizando los resultados (por cada comando o en total). Ideas:
+* generar un informe analizando los resultados (bajo demanda). Ideas:
 	* contraseñas crackeadas/desconocidas
 	* tiempo de ejecución
-	* patrones encontrados...
+	* patrones encontrados (num, alfa, numalfa, tamaño, palabras)
 * añadir funcionalidad de guardar y restaurar sessiones
-* añadir más diccionarios interesantes:
-	* hashkiller.txt
-	* default.txt
+* analizar contraseñas anteriores y continuar mejorando las configuraciones.

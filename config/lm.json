@@ -1,0 +1,16 @@
+{
+	"files": {
+		"wordlists_files": [
+		],
+		"rules_files": [
+		],
+		"masks_files": [
+		]
+	},
+	"attacks" : {
+		"brute_force_with_masks_manual": [
+			{"masks": "-1 ?u?d?s ?1?1?1?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 7},
+			{"masks": "-1 ?a€¡¨ª´º¿ÀÁÇÈÉÍÏÑÒÓÚÜàáçèéíïñòóúüñÑ·¬ ?1?1?1?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 7}
+		]
+	}
+}
