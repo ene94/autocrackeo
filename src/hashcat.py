@@ -235,4 +235,6 @@ class Hashcat(object):
 		with open(wordlist_file, 'w') as f:
 			f.write("".join(lines))
 
+		if self.verbose: showVerbose("Recovered passwords from potfile dumped to wordlist" + wordlist_file)
+
 		return
