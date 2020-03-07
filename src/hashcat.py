@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 try:
 	import subprocess
-	from src.color import Color
+	from src.color import *
+
+	from pprint import pprint
 except Exception as e:
 	sys.exit(e)
 
@@ -10,16 +12,20 @@ class Hashcat(object):
 	Communicate with hashcat to execute commands
 	Usage: hashcat [options]... hash|hashfile|hccapxfile [dictionary|mask|directory]...
 	"""
-	def __init__(self, conf):
+	def __init__(self, conf, verbose):
 		"""
 		Storage for all posible parameters used by hashcat commands
 		"""
+
+		# autocrackeo input params
+		self.verbose = verbose
 
 		# static params
 		self.executable = conf["executable"]
 		self.hash_type = "-m " + conf["hash_type"]
 		self.hash_file = conf["hash_file"]
-		self.pot_file = "--potfile-path \"" + conf["pot_file"] + "\""
+		self.pot_file = "--potfile-path " + conf["pot_file"]
+		self.pot_file_path = conf["pot_file"]
 		#self.out_file = "-o " + conf["out_file"]
 		self.out_file_format_pwd = "--outfile-format 2"# 2 pwd o 3 hash:pwd # si se añade --username será user:hash:pwd
 		self.out_file_format_hash = "--outfile-format 1"# only hash
@@ -54,7 +60,7 @@ class Hashcat(object):
 		"""
 		Execute a os command with given string
 		"""
-		print(Color.cyan("\n" + cmd))
+		if self.verbose: showCmd(cmd)
 		p = subprocess.call(cmd, shell=True)
 
 		'''
@@ -204,9 +210,29 @@ class Hashcat(object):
 		 Call hashcat's show command and save the cracked hashes from a given hashfile, hashtype and potfile
 		"""
 		cmd = f"{self.executable} {self.hash_type} \"{self.hash_file}\" {self.pot_file} {self.out_file_format_pwd} {self.extra_params} {self.show}"
-		print(Color.cyan("\n" + cmd))
+		if self.verbose: showCmd(cmd)
 		f = open(self.out_file_cracked_path, 'w')
 		p = subprocess.call(cmd, stdout=f, shell=True)
 		f.close()
-		print("Cracked hashes saved in " + self.out_file_cracked_path + " ...")
+		if self.verbose: showVerbose("Cracked hashes saved in " + self.out_file_cracked_path)
+		return
+
+	def feedback(self, wordlist_file):
+		"""
+		 Dump plaintext password from potfile to wordlist
+		"""
+		# read custom wordlist unique passwords
+		with open(wordlist_file, 'r') as f:
+			lines = set(f)
+
+		# add new unique passwords on potfile
+		with open(self.pot_file_path, 'r') as f:
+			for hash_pwd in f:
+				pwd = hash_pwd.split(":")[1]
+				lines.add(pwd)
+
+		# write updated wordlist and plaintext passwords on custom wordlist file
+		with open(wordlist_file, 'w') as f:
+			f.write("".join(lines))
+
 		return

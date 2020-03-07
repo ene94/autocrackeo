@@ -20,4 +20,4 @@ wordlists/rockyou.dic
 wordlists/default-passwords.txt
 wordlists/kaonashi14M.txt
 wordlists/probable-v2-wpa-top4800.txt
-results/*.pot
+docs/test_files/results/*

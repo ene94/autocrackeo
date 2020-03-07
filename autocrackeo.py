@@ -1,25 +1,29 @@
 # -*- coding: utf-8 -*-
+# Author: MaiShadow
+
+"""
+ Import modules
+"""
 try:
 	import os, sys, json, argparse
 	version = str(sys.version_info[0]) + "." + str(sys.version_info[1])
 	if sys.version_info[0] < 3 or sys.version_info[1] < 6:
-	    sys.exit("Python version must be at least 3.6, current is " + version)
+	    sys.exit("[X] Python version must be at least 3.6, current is " + version)
+
 	from datetime import datetime, timedelta
-	from src.color import Color
+	from src.color import *
 	from src.configuration import Configuration
 	from src.attacks import Attacks
 	from src.hashcat import Hashcat
 
-	from pprint import pprint
-
 except Exception as e:
-	sys.exit(e)
+	sys.exit(" [X] " + str(e))
 
-def get_arguments():
-	"""
-	 Manage input parameters
-	"""
-	parser = argparse.ArgumentParser(description="Automated Hashcat usage tool", epilog='Examples:\npython3 autocrackeo.py -m 1000 -f hashes\\test.hash -c config\\quick_test.json -e="--username" -r -o .')
+"""
+ Manage input parameters
+"""
+def getArguments():
+	parser = argparse.ArgumentParser(description="Automated Hashcat usage tool", epilog='Usage: python3 autocrackeo.py -m 1000 -i docs\\test_files\\ntlm.hash -w docs\\test_files\\custom.dic -o docs\\test_files\\results -c all -e="--username" --feedback --verbose')
 	
 	# or hashfile + hashtype, or hash files list
 	parser.add_argument("-m", type=str, dest="hash_type", help="hashcat's hash type number or its corresponding title, more info here: https://hashcat.net/wiki/doku.php?id=example_hashes")
@@ -35,44 +39,35 @@ def get_arguments():
 
 	# extra params to add at the end of the hashcat command
 	parser.add_argument("-e", "--extra-params", type=str, dest="extra_params", default="", help="extra params to add in the hashcat command")
-	parser.add_argument("-v", "--version", action='version', version='%(prog)s 1.4 (30/05/2019)')
+	
+	# other functionalities
+	parser.add_argument("--feedback", action="store_true", dest="feedback", help="dump plaintext passwords from potfile (-o) to custom wordlist (-w)")
+	parser.add_argument("-v", "--verbose", action='store_true', dest="verbose", help="show more messages")
+	parser.add_argument("--version", action='version', version='%(prog)s 1.6 (07/03/2020)')
 
 	# output directory, default current dir
 	parser.add_argument("-o", "--output-dir", type=str, dest="output_dir", default="", help="path to store the results (potfile.pot, cracked.txt, user_pwd.txt")
 	return parser.parse_args()
 
-def datetime_to_string(date_time):
-	# ex. 20110104172008 -> Jan. 04, 2011 5:20:08pm 
-	fmt = '%d/%m/%Y %H:%M:%S'
-	date_time_string = date_time.strftime(fmt)
-	return date_time_string
-
-def timedelta_to_string(time_delta):
-	td = str(time_delta).split('.')[0]
-	td = td.split(':')
-	return "{0}h {1}m {2}s".format(td[0], td[1], td[2])
-
-if __name__ == "__main__":
+def main():
 	"""
 	 configuration: all the config data
 	 attacks: configure attacks from config data
 	 hashcat: calls to hashcat individual attacks
 	"""
-	os.system("") # enable command colors
-	print(Color.cyan("\n...AutoCrackeo..."))
 
 	# print start datetime
 	start_date = datetime.now()
-	print(Color.yellow("\nStart date: " + datetime_to_string(start_date)))
-	print("\nPress enter or 's' to see hashcat's status...")
-	print("Press 'q' to skip one hashcat command...")
-	print("Press Ctrl+c to skip all hashcat commands at once...")
+	showVerbose("Start date: " + datetime_to_string(start_date))
+	showVerbose("Press enter or 's' to see hashcat's status...")
+	showVerbose("Press 'q' to skip one hashcat command...")
+	showVerbose("Press Ctrl+c to skip all hashcat commands at once...")
 
 	# get input arguments
-	arguments = get_arguments()
+	arguments = getArguments()
 
 	if not arguments.config_file:
-		Color.show_error_text("\nNothing happening here... add [-c config_file] to execute attacks", True)
+		showError("Nothing happening here... add [-c config_file] to execute attacks", True)
 
 
 	"""
@@ -107,19 +102,17 @@ if __name__ == "__main__":
 				parsing_errors = True
 
 			if parsing_errors:
-				Color.show_error_text("Error in the files/types/extra_param parsing... skipping this file", False)
+				showError("Error in the files/types/extra_param parsing... skipping this file", False)
 				break
 
 			conf = Configuration(hash_file, hash_type, config_file, extra_params, arguments.output_dir, arguments.wordlist_custom_file)
-			hashcat = Hashcat(conf.static_values)
+			hashcat = Hashcat(conf.static_values, arguments.verbose)
 			attacks = Attacks(hashcat)
 
 			# print important info
-			print(Color.yellow("\n-----------------------------------------------------------------------------------------------------------\n"))
-			print(Color.yellow("config file: " + config_file))
-			print(Color.yellow("hash file: " + hash_file))
-			print(Color.yellow("hash type: " + hash_type))
-			print(Color.yellow("extra params: " + extra_params))
+			showTitle("")
+			showMessage("Attacks config file:" + config_file + ", hash file:" + hash_file 
+				+ ", hash type:" + hash_type + ", extra params:" + extra_params + ".\n")
 
 
 
@@ -131,7 +124,7 @@ if __name__ == "__main__":
 				"""
 				try:
 					for attack_name in conf.attacks:
-						print(Color.yellow("\n" + attack_name.replace("_"," ").title()))
+						if arguments.verbose: showVerbose("Attack type: " + attack_name.replace("_"," ").title())
 						if "straight" in attack_name:
 							attacks.straight_attacks(attack_name, conf.attacks[attack_name], conf.wordlists, conf.rules)
 						elif "combinator" in attack_name:
@@ -143,16 +136,20 @@ if __name__ == "__main__":
 						elif "one_word_per_hash" in attack_name:
 							attacks.OneWordPerHashAttacks(attack_name, conf.attacks[attack_name], conf.wordlists)
 						else:
-							print(Color.red("This attack name is not recognized!"))
+							showError("This attack name is not recognized!", False)
+
+						# dump plaintext passwords from potfile to custom wordlist
+						if arguments.feedback: hashcat.feedback(arguments.wordlist_custom_file)
+
 				except KeyboardInterrupt:
 					"""
 					 Set a SIGINT signal handler 
 					 to securely skip all the attacks for this hash_file and config_file
 					 but it continues the loop
 					"""
-					print(Color.red(" --> Skipping attacks"))
+					showError("Skipping attacks", False)
 				except Exception as e:
-					Color.show_error(e)
+					showException(e, True)
 
 				hashcat.save_cracked() # ALWAYS DUMP RESULTS: for every config file tried, and every hash file/type
 
@@ -160,14 +157,36 @@ if __name__ == "__main__":
 	 Print end of execution
 	"""	
 	# print end datetime and duration
+	showTitle("")
 	end_date = datetime.now()
-	print(Color.yellow("\nEnd date: " + datetime_to_string(end_date)))
+	showVerbose("End date: " + datetime_to_string(end_date))
 	duration = end_date - start_date
-	print(Color.yellow("Duration: " + timedelta_to_string(duration)))
+	showVerbose("Duration: " + timedelta_to_string(duration))
 
-	print(Color.yellow("\nMischief Managed!"))
 
+"""
+ Helper methods
+"""
 def datetime_to_string(date_time):
-	fmt = '%d/%m/%Y %H:%M:%S' # ex. 20110104172008 -> Jan. 04, 2011 5:20:08pm 
+	# ex. 20110104172008 -> Jan. 04, 2011 5:20:08pm 
+	fmt = '%d/%m/%Y %H:%M:%S'
 	date_time_string = date_time.strftime(fmt)
 	return date_time_string
+
+def timedelta_to_string(time_delta):
+	td = str(time_delta).split('.')[0]
+	td = td.split(':')
+	return "{0}h {1}m {2}s".format(td[0], td[1], td[2])
+
+
+"""
+ Call main method
+"""
+if __name__ == '__main__':
+	os.system("") # do nothing but enable command colors on windows cmd
+	showTitle("Autocrackeo")
+	try:
+		main()
+	except Exception as e:
+		showException(e, True)
+	showEnding()

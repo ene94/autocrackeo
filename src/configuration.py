@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 try:
 	import os, sys, json
-	from src.color import Color
-	from pprint import pprint
+	from src.color import *
 except Exception as e:
 	sys.exit(e)
 
@@ -36,7 +35,7 @@ class Configuration(object):
 			if not os.path.exists(self.results_dir):
 				os.makedirs(self.results_dir)
 		except OSError as e:
-			Color.show_error(e)
+			showException(e)
 
 		try:
 			"""
@@ -114,7 +113,7 @@ class Configuration(object):
 			#pprint(self.static_values)# mostrar contenido del objeto
 
 		except Exception as e:
-			Color.show_error(e)
+			showException(e)
 
 	def checkHashType(self, hash_type):
 		"""
@@ -139,7 +138,7 @@ class Configuration(object):
 					Color.show_error_text("Invalid hash type number or title. Check valid list here: https://hashcat.net/wiki/doku.php?id=example_hashes", True)
 
 		except Exception as e:
-			Color.show_error(e)
+			showException(e)
 
 	@staticmethod
 	def getHashFilesArray(hash_file, hash_type, extra_params, hash_files):
@@ -170,7 +169,7 @@ class Configuration(object):
 				return files_list
 
 		except Exception as e:
-			Color.show_error(e)
+			showException(e)
 
 	@staticmethod
 	def getConfigFilesArray(config_file):
@@ -182,7 +181,7 @@ class Configuration(object):
 
 			return config_files_list
 		else:
-			Color.show_error_text("Invalid ConfigFile", True)
+			showError("Invalid ConfigFile", True)
 
 	@staticmethod
 	def parseConfigFilesList(all_configs_file):
@@ -197,7 +196,7 @@ class Configuration(object):
 				return files_list
 
 		except Exception as e:
-			Color.show_error(e)
+			showException(e)
 
 	@staticmethod
 	def getBaseDir():

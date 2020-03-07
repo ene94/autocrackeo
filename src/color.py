@@ -1,50 +1,44 @@
-import sys
+"""
+ Print text and colors
+"""
 
-class Color:
-	"""
-	Print text with colors
-	"""
+try:
+	import sys
+	from termcolor import colored
+except Exception as e:
+	sys.exit(" [X] " + str(e))
 
-	CYAN = '\033[1;36m'
-	GREEN = '\033[92m'
-	YELLOW = '\033[93m'
-	RED = '\033[91m'
-	END = '\033[0m'
+def showStarting(starting):
+	print(colored("\n . . . " + starting + " . . . \n", 'cyan'))
 
-	@staticmethod
-	def yellow(text):
-		return Color.YELLOW + text + Color.END
+def showEnding():
+	print(colored("\n ¡ · · · Mischief managed · · ·  !\n", 'cyan'))
 
-	@staticmethod
-	def cyan(text):
-		return Color.CYAN + text + Color.END
+def showTitle(title):
+	print(colored("\n-------- ~ ~ ~  " + title + "\n", 'cyan'))
 
-	@staticmethod
-	def red(text):
-		return Color.RED + text + Color.END
-
-	@staticmethod
-	def green(text):
-		return Color.GREEN + text + Color.END
-	
-	@staticmethod
-	def show_error(e):
-		"""
-		Show exceptions
-		"""
-		exc_type, exc_obj, tb = sys.exc_info()
-		f = tb.tb_frame
-		lineno = tb.tb_lineno
-		filename = f.f_code.co_filename
-		print(Color.red("ERROR: " + filename + " in line: " + str(lineno) + " " + str(e)))
+def showException(exception, exit):
+	exc_type, exc_obj, tb = sys.exc_info()
+	f = tb.tb_frame
+	lineno = tb.tb_lineno
+	filename = f.f_code.co_filename
+	print(colored(" [X] " + filename + " in line: " + str(lineno) + " " + str(e), 'red'))
+	if exit:
 		sys.exit()
 
-	@staticmethod
-	def show_error_text(text, exit):
-		"""
-		Show custom error message
-		"""
-		print(Color.red("ERROR: " + text))
-		if exit:
-			sys.exit()
+def showError(error, exit):
+	print(colored(" [X] " + error, 'red'))
+	if exit:
+		sys.exit()
 
+def showSuccess(success):
+	print(colored(" [+] " + success, 'green'))
+
+def showMessage(message):
+	print(colored(" [*] " + message, 'yellow'))
+
+def showVerbose(verbose):
+	print("  · · · " + verbose)
+
+def showCmd(verbose):
+	print(colored("\n  · · · " + verbose, 'cyan'))

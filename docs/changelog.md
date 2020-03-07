@@ -38,16 +38,19 @@
 	* eliminar innecesario texto con resultados.
 	* añadir elección de ruta a /results/ donde dejar el potfile y los resultados de la ejecución
 	* cambiar argumento -c para utilizar ruta relativa desde /autocrackeo/config/ con -c test.json o ruta absoluta C:\test\test.json
-	* añadir argumento de entrada par aelegir el path del archivo custom.dic a utilizar
+	* añadir argumento de entrada para elegir el path del archivo custom.dic a utilizar
 
 * 08/02/2019: v1.4
 	* añadir pathwell.hcmask mask to all_wordlists_all_rules.json
 	* opción -c "all" para que ejecute en secuencialmente cada archivo de configuración definido en el archivo all.json
 
-
 * 08/02/2019: v1.5
 	* cambios en las configuraciones para ajustar los tiempos de ejecución
 	* añadidos recursos y ataques del repositorio kaonashi de github
+
+* 07/03/2020: v1.6
+	* cambios en el formato de mostrar comentarios por pantalla y colores
+	* añadida la opción --feedback  para volcar contraseñas nuevas del potfile al diccionario personalizado (-w)
 
 
 # TODO

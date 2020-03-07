@@ -13,6 +13,8 @@ def download_files(files, directory):
 				print("\nSaved in " + path)
 			except KeyboardInterrupt as e:
 				print("\n[!] Skipping...")
+			except Exception as e:
+				print("[X] " + str(e))
 	else:
 		print("\n[X] Folder " + directory + " does not exist...")
 

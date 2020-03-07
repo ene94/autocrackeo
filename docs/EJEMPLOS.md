@@ -1,5 +1,5 @@
 
-# COMANDOS WENOS WENOS 
+# COMANDOS DE EJEMPLO 
 
 --> ir variando: -c con los valores "quick_test.json", "fast.json", "basic.json", "full.json", "all_wordlists_all_rules.json" o "all"
 
@@ -14,13 +14,14 @@ python3 %PATH_AUTOCRACKEO%\autocrackeo.py -i %PATH_PROYECTO%\hashes\ntlm.hash -m
 ```
 
 ## Realimentar el custom.dic con las contraseñas crackeadas del potfile.pot
+* UPDATE: esto ya se ha implementado al script con la opción: --feedback
 ```
 cd D:\CLIENTES\2019\Proyecto\
 cat results/potfile.pot | awk -F: '{print $NF}' >> custom.dic && sort custom.dic | uniq > custom.dic2 && mv custom.dic2 custom.dic
 ```
 
 
---------------------------------------------------------------------------------------------------------------------------------
+---
 
 # Todos los archivos de configuración: -c all
 
@@ -78,4 +79,3 @@ sin repetir super.dic ni cracked.dic, ni rockyou.dic...
 -c all_custom.json -w custom.dic
 -c all_custom_insane.json -w custom.dic
 ```
-
