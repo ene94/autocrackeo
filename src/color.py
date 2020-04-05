@@ -22,7 +22,7 @@ def showException(exception, exit):
 	f = tb.tb_frame
 	lineno = tb.tb_lineno
 	filename = f.f_code.co_filename
-	print(colored(" [X] " + filename + " in line: " + str(lineno) + " " + str(e), 'red'))
+	print(colored(" [X] " + filename + " in line: " + str(lineno) + " " + str(exception), 'red'))
 	if exit:
 		sys.exit()
 
@@ -38,7 +38,9 @@ def showMessage(message):
 	print(colored(" [*] " + message, 'yellow'))
 
 def showVerbose(verbose):
-	print("  · · · " + verbose)
+	#print("  · · · " + verbose)
+	print("  . . . " + verbose)
 
 def showCmd(verbose):
-	print(colored("\n  · · · " + verbose, 'cyan'))
+	#print(colored("\n  · · · " + verbose, 'cyan'))
+	print(colored("\n  . . . " + verbose, 'cyan'))

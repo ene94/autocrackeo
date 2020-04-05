@@ -1,6 +1,6 @@
 masks/kaonashi.hcmask
 masks/2015-Top40-Time-Sort.hcmask
-masks/pathwell_sorted.hcmask
+masks/pathwell.hcmask
 masks/rockyou-1-60.hcmask
 rules/OneRuleToRuleThemAll.rule
 rules/T0XlC.rule
@@ -16,8 +16,11 @@ wordlists/Password_Default_ProbWL.txt
 wordlists/google-10000-english.txt
 wordlists/realhuman_phill.txt
 wordlists/hashkiller-dict.txt
-wordlists/rockyou.dic
+wordlists/rockyou.txt
 wordlists/default-passwords.txt
 wordlists/kaonashi14M.txt
 wordlists/probable-v2-wpa-top4800.txt
-docs/test_files/results/*
+docs/test_files/results
+virt
+.idea
+src/__pycache__

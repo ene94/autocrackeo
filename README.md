@@ -10,14 +10,14 @@ La idea es tener varios archivos fast.json, basic.json, full.json, etc. con ataq
 Probado en windows/linux con python 3
 * [python3](https://www.python.org/downloads/)
 * [hashcat](https://github.com/hashcat/hashcat)
-	* Hay que tener en cuenta que dependiendo de la versión del hashcat (en windows) te fuerza a lanzar el hashcat únicamente desde su propio directorio.
+	* Hay que tener en cuenta que dependiendo de la versión del hashcat (en windows y a partir de la 3.6) te fuerza a lanzar el hashcat únicamente desde su propio directorio.
 
 ## Manual de usuario
 
 ### Por dónde empezar
 Especifica el path al ejecutable de hashcat y las opciones de rendimiento en el archivo de configuración del equipo "HOST_CONFIG.json", por ejemplo:
 * executable: C:\tools\hashcat\hashcat64.exe
-* resource_level: low_windows / low_kali / high
+* resources: Opciones de hashcat para funcionar dependiendo del equipo en el que se ejecuta: -D 1 -w 3 --force ...
 
 Ejecuta el programa: 
 * El programa muestra por pantalla la ejecución del hashcat, por lo que se puede interactuar con él:
@@ -39,29 +39,31 @@ Nota: El tiempo que tarde dependerá de muchos factores como el número de hashe
 
 ### Ayuda
 Para ver todas las opciones:
-```
+```python
 python3 autocrackeo.py -h
 ```
 
 ### Ejemplos
-Ejemplo más sencillo: lanza comandos de hashcat sobre el archivo de hashes de entrada
-```
-python3 $PATH_AUTOCRACKEO/autocrackeo.py -i ntlm.hash -m 1000 -c all
+Ejemplo más sencillo: lanza comandos de hashcat sobre el archivo de hashes de entrada  
+Tenéis unos archivos de prueba en la siguiente ruta autocrackeo\docs\test_files: ntlm.hash y custom.dic
+```console
+python3 %PATH_AUTOCRACKEO%/autocrackeo.py -i %PATH_PROYECTO%\ntlm.hash -m 1000 -c all
 ```
 
 Un archivo: pasando un diccionario de entrada personalizado y diciéndole donde dejar los resultados
-```
-python3 $PATH_AUTOCRACKEO/autocrackeo.py -i ntlm.hash -m 1000 -c quick_test.json -w custom_wordlist.dic -o results_dir -e="--username"
+```console
+python3 %PATH_AUTOCRACKEO%/autocrackeo.py -m 1000 -i %PATH_PROYECTO%\ntlm.hash -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results_dir -e="--username" -c quick_test.json
 ```
 
 Varios archivos secuencialmente: para más información ver explicación en la carpeta "docs/Ejemplos"
-```
-python3 $PATH_AUTOCRACKEO/autocrackeo.py -I hash_files_list.json -c quick_test.json -w custom_wordlist.dic -o results -e="--username"
+```console
+python3 %PATH_AUTOCRACKEO%/autocrackeo.py -I %PATH_PROYECTO%\hash_files_list.json -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results -e="--username" -c quick_test.json 
 ```
 
 Nota: en algunas versiones de hashcat te fuerza a ejecutar el hashcat desde el propio directorio del ejecutable, así que modificar las rutas a los archivos para ese caso concreto. Por ejemplo:
-```
-python3 %PATH_AUTOCRACKEO%\autocrackeo.py -i %PATH_PROYECTO%\ntlm.hash -m ntlm -c quick_test.json -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results
+```console
+cd \tools\hashes\hashcat-5.1.0\
+python3 %PATH_AUTOCRACKEO%\autocrackeo.py -m ntlm  -i %PATH_PROYECTO%\ntlm.hash  -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results -c quick_test.json
 ```
 
 Se recomienda el uso de las siguientes opciones:

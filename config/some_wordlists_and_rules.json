@@ -3,12 +3,12 @@
 		"wordlists_files": [
 			"cracked.dic",
 			"custom.dic",
-			"default-passwords.txt",
+			"Password_Default_ProbWL.txt",
 			"hashkiller-dict.txt",
 			"super.dic",
-			"rockyou.dic",
+			"rockyou.txt",
 			"kaonashi14M.txt",
-			"google-10000-english.dic"
+			"google-10000-english.txt"
 		],
 		"rules_files": [
 			"OneRuleToRuleThemAll.rule",

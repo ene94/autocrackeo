@@ -47,12 +47,7 @@ class Configuration(object):
 
 			# host config: executable, resources
 			self.static_values["executable"] = hostconf["executable"]
-			if hostconf["resources"]["resource_level"] == "low_windows":
-				self.static_values["resource_options"] = hostconf["resources"]["resource_low_windows"]
-			elif hostconf["resources"]["resource_level"] == "low_kali":
-				self.static_values["resource_options"] = hostconf["resources"]["resource_low_kali"]
-			else:
-				self.static_values["resource_options"] = hostconf["resources"]["resource_high"]
+			self.static_values["resource_options"] = hostconf["resources"]
 
 			"""
 			 Load parameters from input arguments
@@ -77,7 +72,7 @@ class Configuration(object):
 			for file_path in file_paths:
 				exists = os.path.isfile(file_path)
 				if not exists:
-					Color.show_error_text("File {file_path} does not exist...".format(file_path=file_path), True)
+					showError("File {file_path} does not exist...".format(file_path=file_path), True)
 
 			"""
 			 Load attacks and useful files from config file

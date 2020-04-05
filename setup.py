@@ -1,4 +1,4 @@
-import wget, json, os
+import wget, os
 
 def download_files(files, directory):
 
@@ -47,8 +47,8 @@ wordlists = {
 	"google-10000-english.txt": "https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt",
 	"Password_Default_ProbWL.txt": "https://raw.githubusercontent.com/berzerk0/Probable-Wordlists/master/Dictionary-Style/Technical_and_Default/Password_Default_ProbWL.txt",
 	"probable-v2-wpa-top4800.txt": "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/WiFi-WPA/probable-v2-wpa-top4800.txt",
-	"rockyou.dic": "http://downloads.skullsecurity.org/passwords/rockyou.txt.bz2",
-	"hashkiller": "https://hashkiller.co.uk/Export/hashkiller-dict.7z",
+	"rockyou.txt.bz2": "http://downloads.skullsecurity.org/passwords/rockyou.txt.bz2",
+	"hashkiller.7z": "https://hashkiller.io/downloads/hashkiller-dict-2020-01-26.7z",
 	"crackstation-human-only.txt.gz": "https://crackstation.net/files/crackstation-human-only.txt.gz"
 }
 
@@ -59,6 +59,7 @@ download_files(rules, os.path.join(base_dir, "rules"))
 download_files(masks, os.path.join(base_dir, "masks"))
 download_files(wordlists, os.path.join(base_dir, "wordlists"))
 
-print("\n\n\n\n[-->] TODO: extract rockyou.txt.bz2 --> rockyou.txt")
+print("\n\n\n\n[-->] TODO: extract rockyou.txt.bz2 --> bzip2 -d rockyou.txt.bz2")
+print("\n[-->] TODO: extract hashkiller-dict-2020-01-26.7z --> 7za e hashkiller-dict-2020-01-26.7z")
 print("\n[-->] TODO: extract crackstation-human-only.txt.gz --> realhuman_phill.txt")
-print("\n[-->] TODO: download from mega or torrent Kaonashi14M --> https://github.com/kaonashi-passwords/Kaonashi/tree/master/wordlists")
+print("\n[-->] TODO: download from mega or torrent Kaonashi14M --> https://github.com/kaonashi-passwords/Kaonashi/tree/master/wordlists and extract the wordlist: 7za e kaonashi14M.7z")
