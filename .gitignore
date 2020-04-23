@@ -23,4 +23,6 @@ wordlists/probable-v2-wpa-top4800.txt
 docs/test_files/results
 virt
 .idea
+.vscode
 src/__pycache__
+autocrackeo-gui.py

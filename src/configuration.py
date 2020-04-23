@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 try:
 	import os, sys, json
-	from src.color import *
+	from src.color import Color
 except Exception as e:
 	sys.exit(e)
 
@@ -10,6 +10,7 @@ class Configuration(object):
 	 Gather all the information and configuration the program is going to use
 	"""
 	def __init__(self, hash_file, hash_type, config_file, extra_params, output_dir, wordlist_custom_dir):
+		self.color = Color()
 		conf = None
 		hostconf = None
 		self.attacks = {}
@@ -35,7 +36,7 @@ class Configuration(object):
 			if not os.path.exists(self.results_dir):
 				os.makedirs(self.results_dir)
 		except OSError as e:
-			showException(e)
+			Color.showException(e)
 
 		try:
 			"""
@@ -72,7 +73,7 @@ class Configuration(object):
 			for file_path in file_paths:
 				exists = os.path.isfile(file_path)
 				if not exists:
-					showError("File {file_path} does not exist...".format(file_path=file_path), True)
+					Color.showError("File {file_path} does not exist...".format(file_path=file_path), True)
 
 			"""
 			 Load attacks and useful files from config file
@@ -108,7 +109,7 @@ class Configuration(object):
 			#pprint(self.static_values)# mostrar contenido del objeto
 
 		except Exception as e:
-			showException(e)
+			Color.showException(e)
 
 	def checkHashType(self, hash_type):
 		"""
@@ -130,10 +131,10 @@ class Configuration(object):
 				if hash_type in lower_keys.keys():
 					return lower_keys[hash_type]
 				else:
-					Color.show_error_text("Invalid hash type number or title. Check valid list here: https://hashcat.net/wiki/doku.php?id=example_hashes", True)
+					Color.showError("Invalid hash type number or title. Check valid list here: https://hashcat.net/wiki/doku.php?id=example_hashes", True)
 
 		except Exception as e:
-			showException(e)
+			Color.showException(e)
 
 	@staticmethod
 	def getHashFilesArray(hash_file, hash_type, extra_params, hash_files):
@@ -144,7 +145,7 @@ class Configuration(object):
 					extra_params = ""
 				hash_files_list = [{"hash_file": hash_file, "hash_type": hash_type, "extra_params": extra_params}]
 			else:
-				Color.show_error_text("Error: the argument -m [HASH_TYPE] is required", True)
+				Color.showError("Error: the argument -m [HASH_TYPE] is required", True)
 		# or get hash_files, hash_types, and extra_params from json file
 		elif hash_files:
 			hash_files_list = Configuration.parseHashFilesList(hash_files)
@@ -164,7 +165,7 @@ class Configuration(object):
 				return files_list
 
 		except Exception as e:
-			showException(e)
+			Color.showException(e)
 
 	@staticmethod
 	def getConfigFilesArray(config_file):
@@ -176,7 +177,7 @@ class Configuration(object):
 
 			return config_files_list
 		else:
-			showError("Invalid ConfigFile", True)
+			Color.showError("Invalid ConfigFile", True)
 
 	@staticmethod
 	def parseConfigFilesList(all_configs_file):
@@ -191,7 +192,7 @@ class Configuration(object):
 				return files_list
 
 		except Exception as e:
-			showException(e)
+			Color.showException(e)
 
 	@staticmethod
 	def getBaseDir():

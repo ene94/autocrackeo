@@ -5,13 +5,13 @@
  Import modules
 """
 try:
-	import os, sys, json, argparse
+	import os, sys, json, argparse, logging
 	version = str(sys.version_info[0]) + "." + str(sys.version_info[1])
 	if sys.version_info[0] < 3 or sys.version_info[1] < 6:
 	    sys.exit("[X] Python version must be at least 3.6, current is " + version)
 
 	from datetime import datetime, timedelta
-	from src.color import *
+	from src.color import Color
 	from src.configuration import Configuration
 	from src.attacks import Attacks
 	from src.hashcat import Hashcat
@@ -49,7 +49,7 @@ def getArguments():
 	parser.add_argument("-o", "--output-dir", type=str, dest="output_dir", default="", help="path to store the results (potfile.pot, cracked.txt, user_pwd.txt")
 	return parser.parse_args()
 
-def main():
+def main(color):
 	"""
 	 configuration: all the config data
 	 attacks: configure attacks from config data
@@ -58,16 +58,16 @@ def main():
 
 	# print start datetime
 	start_date = datetime.now()
-	showVerbose("Start date: " + datetime_to_string(start_date))
-	showVerbose("Press enter or 's' to see hashcat's status...")
-	showVerbose("Press 'q' to skip one hashcat command...")
-	showVerbose("Press Ctrl+c to skip all hashcat commands at once...")
+	Color.showVerbose("Start date: " + Color.datetime_to_string(start_date))
+	Color.showVerbose("Press enter or [s] to see hashcat's status...")
+	Color.showVerbose("Press [q]' to skip one hashcat command...")
+	Color.showVerbose("Press [Ctrl+c] to skip all hashcat commands at once...")
 
 	# get input arguments
 	arguments = getArguments()
 
 	if not arguments.config_file:
-		showError("Nothing happening here... add [-c config_file] to execute attacks", True)
+		Color.showError("Nothing happening here... add [-c config_file] to execute attacks", True)
 
 
 	"""
@@ -102,19 +102,22 @@ def main():
 				parsing_errors = True
 
 			if parsing_errors:
-				showError("Error in the files/types/extra_param parsing... skipping this file", False)
+				Color.showError("Error in the files/types/extra_param parsing... skipping this file", False)
 				break
 
+			# load other scripts
 			conf = Configuration(hash_file, hash_type, config_file, extra_params, arguments.output_dir, arguments.wordlist_custom_file)
-			hashcat = Hashcat(conf.static_values, arguments.verbose)
+			hashcat = Hashcat(conf.static_values, arguments.verbose, color)
 			attacks = Attacks(hashcat)
 
 			# print important info
-			showTitle("")
-			showMessage("Attacks config file:" + config_file + ", hash file:" + hash_file 
-				+ ", hash type:" + hash_type + ", extra params:" + extra_params + ".\n")
+			Color.showTitle("")
+			msg = "Attacks config file:" + config_file + ", hash file:" + hash_file + ", hash type:" + hash_type + ", extra params:" + extra_params
+			Color.showMessage(msg  + "\n")
 
-
+			# set logging config
+			color.setFileHandler(os.path.join(conf.results_dir, "autocrackeo.log")) # set log file for every hash file
+			color.logThis("[i] " + Color.datetime_to_string(datetime.now()) + ", " + msg)
 
 			if config_file: # if -c/--config
 				"""
@@ -124,7 +127,7 @@ def main():
 				"""
 				try:
 					for attack_name in conf.attacks:
-						if arguments.verbose: showVerbose("Attack type: " + attack_name.replace("_"," ").title())
+						if arguments.verbose: Color.showVerbose("Attack type: " + attack_name.replace("_"," ").title())
 						if "straight" in attack_name:
 							attacks.straight_attacks(attack_name, conf.attacks[attack_name], conf.wordlists, conf.rules)
 						elif "combinator" in attack_name:
@@ -136,7 +139,7 @@ def main():
 						elif "one_word_per_hash" in attack_name:
 							attacks.OneWordPerHashAttacks(attack_name, conf.attacks[attack_name], conf.wordlists)
 						else:
-							showError("This attack name is not recognized!", False)
+							Color.showError("This attack name is not recognized!", False)
 
 						# dump plaintext passwords from potfile to custom wordlist
 						if arguments.feedback: hashcat.feedback(arguments.wordlist_custom_file)
@@ -147,9 +150,10 @@ def main():
 					 to securely skip all the attacks for this hash_file and config_file
 					 but it continues the loop
 					"""
-					showError("Skipping attacks", False)
+					Color.showError("Skipping attacks", False)
+					color.logThis("[X] Ctrl+C: Skipping attacks...")
 				except Exception as e:
-					showException(e, True)
+					Color.showException(e, True)
 
 				hashcat.save_cracked() # ALWAYS DUMP RESULTS: for every config file tried, and every hash file/type
 
@@ -157,36 +161,21 @@ def main():
 	 Print end of execution
 	"""	
 	# print end datetime and duration
-	showTitle("")
+	Color.showTitle("")
 	end_date = datetime.now()
-	showVerbose("End date: " + datetime_to_string(end_date))
+	Color.showVerbose("End date: " + Color.datetime_to_string(end_date))
 	duration = end_date - start_date
-	showVerbose("Duration: " + timedelta_to_string(duration))
-
-
-"""
- Helper methods
-"""
-def datetime_to_string(date_time):
-	# ex. 20110104172008 -> Jan. 04, 2011 5:20:08pm 
-	fmt = '%d/%m/%Y %H:%M:%S'
-	date_time_string = date_time.strftime(fmt)
-	return date_time_string
-
-def timedelta_to_string(time_delta):
-	td = str(time_delta).split('.')[0]
-	td = td.split(':')
-	return "{0}h {1}m {2}s".format(td[0], td[1], td[2])
-
+	Color.showVerbose("Duration: " + Color.timedelta_to_string(duration))
 
 """
  Call main method
 """
 if __name__ == '__main__':
 	os.system("") # do nothing but enable command colors on windows cmd
-	showTitle("Autocrackeo")
+	color = Color()
+	Color.showTitle("Autocrackeo")
 	try:
-		main()
+		main(color)
 	except Exception as e:
-		showException(e, True)
-	showEnding()
+		Color.showException(e, True)
+	Color.showEnding()

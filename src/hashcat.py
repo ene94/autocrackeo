@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 try:
 	import subprocess
-	from src.color import *
-
-	from pprint import pprint
+	from src.color import Color
+	from datetime import datetime, timedelta
 except Exception as e:
 	sys.exit(e)
 
@@ -12,7 +11,9 @@ class Hashcat(object):
 	Communicate with hashcat to execute commands
 	Usage: hashcat [options]... hash|hashfile|hccapxfile [dictionary|mask|directory]...
 	"""
-	def __init__(self, conf, verbose):
+	def __init__(self, conf, verbose, color):
+		self.color = color
+
 		"""
 		Storage for all posible parameters used by hashcat commands
 		"""
@@ -60,7 +61,9 @@ class Hashcat(object):
 		"""
 		Execute a os command with given string
 		"""
-		if self.verbose: showCmd(cmd)
+		if self.verbose: Color.showCmd(cmd) # show on screen
+		now = Color.timedelta_to_string(datetime.now())
+		self.color.logThis("[+] " + now + ", "  + cmd) # log on file
 		p = subprocess.call(cmd, shell=True)
 
 		'''
@@ -210,11 +213,10 @@ class Hashcat(object):
 		 Call hashcat's show command and save the cracked hashes from a given hashfile, hashtype and potfile
 		"""
 		cmd = f"{self.executable} {self.hash_type} \"{self.hash_file}\" {self.pot_file} {self.out_file_format_pwd} {self.extra_params} {self.show}"
-		if self.verbose: showCmd(cmd)
-		f = open(self.out_file_cracked_path, 'w')
-		p = subprocess.call(cmd, stdout=f, shell=True)
-		f.close()
-		if self.verbose: showVerbose("Cracked hashes saved in " + self.out_file_cracked_path)
+		if self.verbose: Color.showCmd(cmd)
+		with open(self.out_file_cracked_path, 'w') as f:
+			p = subprocess.call(cmd, stdout=f, shell=True)
+		if self.verbose: Color.showVerbose("Cracked hashes saved in " + self.out_file_cracked_path)
 		return
 
 	def feedback(self, wordlist_file):
@@ -235,6 +237,6 @@ class Hashcat(object):
 		with open(wordlist_file, 'w') as f:
 			f.write("".join(lines))
 
-		if self.verbose: showVerbose("Recovered passwords from potfile dumped to wordlist" + wordlist_file)
+		if self.verbose: Color.showVerbose("Recovered passwords from potfile dumped to wordlist" + wordlist_file)
 
 		return

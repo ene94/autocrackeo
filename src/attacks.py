@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 try:
-	from src.color import *
+	import sys
+	from src.color import Color
 except Exception as e:
 	sys.exit(e)
 
@@ -15,6 +16,7 @@ class Attacks():
 	def __init__(self, hashcat):
 		self.hashcat = hashcat
 
+	@staticmethod
 	def get_file_from_index(indexes, all_files):
 		"""
 		Get selected items giving two arrays:
@@ -48,7 +50,7 @@ class Attacks():
 					if len(rules) == 2: # only if 2 rule files are given
 						self.hashcat.straight_with_combined_rules_files(w, rules[0], rules[1])
 					else:
-						showError("Straight combined rules: You have to define two rule files!", False)
+						Color.showError("Straight combined rules: You have to define two rule files!", False)
 				elif attack_name == "straight_with_rules_manual":
 							self.hashcat.straight_with_rules_manual(w, r)
 				elif attack_name == "straight_with_rules_files":
@@ -72,7 +74,7 @@ class Attacks():
 					k = attack["rules_right"]
 					self.hashcat.combinator(w1, w2, j, k)
 			else:
-				showError("Combined rules: You have to define two rule files!", False)
+				Color.showError("Combined rules: You have to define two rule files!", False)
 		return
 
 	def brute_force_attacks(self, attack_name, attacks, all_masks):
@@ -175,5 +177,5 @@ class Attacks():
 						one_word = word_lines[i] # its line corresponding hash:word
 						self.hashcat.one_hash_one_word(one_hash,one_word)
 				else:
-					showError("Hash file and Wordlist file need same length to try hash[i]:word[i]", True)
+					Color.showError("Hash file and Wordlist file need same length to try hash[i]:word[i]", True)
 		return
