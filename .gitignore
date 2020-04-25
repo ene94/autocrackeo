@@ -25,4 +25,4 @@ virt
 .idea
 .vscode
 src/__pycache__
-autocrackeo-gui.py
+docs/TODOs.txt

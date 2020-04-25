@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 try:
-	import subprocess
+	import sys, subprocess
 	from src.color import Color
 	from datetime import datetime, timedelta
 except Exception as e:

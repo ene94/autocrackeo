@@ -43,7 +43,7 @@ def getArguments():
 	# other functionalities
 	parser.add_argument("--feedback", action="store_true", dest="feedback", help="dump plaintext passwords from potfile (-o) to custom wordlist (-w)")
 	parser.add_argument("-v", "--verbose", action='store_true', dest="verbose", help="show more messages")
-	parser.add_argument("--version", action='version', version='%(prog)s 1.6 (07/03/2020)')
+	parser.add_argument("--version", action='version', version='%(prog)s 1.8 (25/04/2020)')
 
 	# output directory, default current dir
 	parser.add_argument("-o", "--output-dir", type=str, dest="output_dir", default="", help="path to store the results (potfile.pot, cracked.txt, user_pwd.txt")
@@ -110,14 +110,17 @@ def main(color):
 			hashcat = Hashcat(conf.static_values, arguments.verbose, color)
 			attacks = Attacks(hashcat)
 
+			
+			#set logging file
+			log_path = os.path.join(conf.results_dir, "autocrackeo.log")
+			color.setFileHandler(log_path) # set log file
+			Color.showVerbose("The results (potfile, cracked passwords and logfile) will be written to: " + conf.results_dir + "\n")
+
 			# print important info
 			Color.showTitle("")
 			msg = "Attacks config file:" + config_file + ", hash file:" + hash_file + ", hash type:" + hash_type + ", extra params:" + extra_params
-			Color.showMessage(msg  + "\n")
-
-			# set logging config
-			color.setFileHandler(os.path.join(conf.results_dir, "autocrackeo.log")) # set log file for every hash file
-			color.logThis("[i] " + Color.datetime_to_string(datetime.now()) + ", " + msg)
+			Color.showMessage(msg  + "\n") # show attack file
+			color.logThis("[i] " + Color.datetime_to_string(datetime.now()) + ", " + msg) # log attack file
 
 			if config_file: # if -c/--config
 				"""

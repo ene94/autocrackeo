@@ -52,17 +52,12 @@
 	* cambios en el formato de mostrar comentarios por pantalla y colores
 	* añadida la opción --feedback  para volcar contraseñas nuevas del potfile al diccionario personalizado (-w)
 
+* 05/04/2020: 1.7
+	* pequeños arreglos
+	* actualización del script para descargar los recursos externos: setup.py
+	* añadido el archivo requirements.txt
 
-# TODO
-* OPCIÓN -q o --quiet --> quitar todos mis comentarios
-* crear archivo de configuración completo desde lo más básico a lo más complejo dedicado a diccionarios personalizados que vayan variando a lo largo del proyecto. Para una vez pasado lo básico (quick_test, fast, basic, full, all_wordlists_all_rules) repetir ataques sólo de custom.dic y sus combinaciones
-* revisar problemas con ", ' y espacios en el cmder
-* omitir la salida en pantalla del hashcat y simplificarla al máximo. Ideas: (esto puede ralentizar el programa...)
-	* simple barra de progreso
-	* notificación de hashes crackeados
-* generar un informe analizando los resultados (bajo demanda). Ideas:
-	* contraseñas crackeadas/desconocidas
-	* tiempo de ejecución
-	* patrones encontrados (num, alfa, numalfa, tamaño, palabras)
-* añadir funcionalidad de guardar y restaurar sessiones
-* analizar contraseñas anteriores y continuar mejorando las configuraciones.
+* 25/04/2020: v1.8
+	* añadida interfaz gráfica con tkinter para lanzar el comando de autocrackeo en un thread aparte
+	* añadida la función de logger para guardar en un archivo los comandos que se han ido ejecutando
+	* update readme with demo images

@@ -16,10 +16,12 @@ class Color(object):
 		self.logger = logging.getLogger(__name__)
 		self.logger.setLevel(logging.INFO)
 		self.fileHandler = None
+		self.logFile = None
 			
 	# send logging to file
 	
 	def setFileHandler(self, logfile):
+		self.logFile = logfile
 		self.fileHandler = logging.FileHandler(logfile)
 		self.fileHandler.setLevel(logging.INFO)
 		self.logger.addHandler(self.fileHandler)

@@ -5,6 +5,14 @@ La idea es tener varios archivos fast.json, basic.json, full.json, etc. con ataq
 
 > python3 autocrackeo.py -m 1000 -i docs\test_files\ntlm.hash  -w docs\test_files\custom.dic -o docs\test_files\results --feedback -c all --verbose
 
+Nueva GUI para generar y ejecutar el comando de forma más visual:
+![Autocrackeo GUI](docs/autocrackeo-gui.png)
+
+Ejecución de autocrackeo:
+![Autocrackeo](docs/autocrackeo.png)
+
+Archivos de resultados generados:
+![Resultados](docs/results.png)
 
 ## Requisitos
 Probado en windows/linux con python 3
@@ -12,11 +20,24 @@ Probado en windows/linux con python 3
 * [hashcat](https://github.com/hashcat/hashcat)
 	* Hay que tener en cuenta que dependiendo de la versión del hashcat (en windows y a partir de la 3.6) te fuerza a lanzar el hashcat únicamente desde su propio directorio.
 
+## Configuración inicial
+
+Instalar módulos requeridos:
+```
+pip3 install -r requirements.txt
+```
+
+Descargar recursos externos:
+* Ejecutar el script de configuración donde están los enlaces a recursos externos que son muy interesantes (diccionarios, reglas, máscaras...)
+```
+python3 setup.py
+```
+
 ## Manual de usuario
 
-### Por dónde empezar
+### Por dónde empezar...
 Especifica el path al ejecutable de hashcat y las opciones de rendimiento en el archivo de configuración del equipo "HOST_CONFIG.json", por ejemplo:
-* executable: C:\tools\hashcat\hashcat64.exe
+* executable: hashcat64.exe (Windows) y hashcat (Linux)
 * resources: Opciones de hashcat para funcionar dependiendo del equipo en el que se ejecuta: -D 1 -w 3 --force ...
 
 Ejecuta el programa: 
@@ -26,7 +47,8 @@ Ejecuta el programa:
 	* **r**: reanudar (resume)
 	* **b**: saltarse fases de un mismo ataque (bypass)
 	* **q**: saltarse un ataque completo (quit)
-* Ctrl+C para cancelar todos los ataques  sobre un archivo de hahes
+* Ctrl+C para cancelar todos los ataques  sobre un archivo de hashes
+
 
 ### Personalización
 1. Modifica el archivo de configuración HOST-CONFIG.json para tu entorno y necesidades.
@@ -35,7 +57,7 @@ Ejecuta el programa:
 	* Lista los archivos de diccionarios, reglas y máscaras que quieras utilizar en este caso.
 	* Define los modos ataque que quieras lanzar con sus parámetros correspondientes.
 
-Nota: El tiempo que tarde dependerá de muchos factores como el número de hashes, el tipo de hash, el tamaño de los diccionarios, la capacidad del equipo, etc.
+Nota: El tiempo que tarde en realizar un archivo de ataques dependerá de muchos factores como el número de hashes, el tipo de hash, el tamaño de los diccionarios, de las máscaras, la capacidad del equipo, etc.
 
 ### Ayuda
 Para ver todas las opciones:
@@ -86,6 +108,7 @@ Diccionarios:
 
 
 ### Recursos de autocrackeo
+Los enlaces a todos ellos para descargarlos de una vez se encuentran en el archivo setup.py:
 
 Diccionarios: wordlists/
 * cracked.dic: añadir aquí las contraseñas que vayas crackeando en cada proyecto para que te sirvan para los posteriores
@@ -142,6 +165,7 @@ El proyecto está dividido por directorios de distintos recursos. Aunque en ning
 * En el directorio **docs/** se almacenarán archivos de interés relacionados con el proyecto
 	* changelog.md: aquí se irán indicando los cambios realizados y las nuevas ideas por desarrollar
 	* Tutorial de crackeo (para hashcat).md: aquí he reunido los conceptos y ejemplos del hashcat que me han sido de utilidad para realizar este proyecto.
+	* Archivo de hashes y diccionario para pruebas.
 
 ## Autora
-* **Eneritz Azqueta** → proyecto realizado como Auditora en **S21sec**
+* **Eneritz Azqueta** → Auditora en **S21sec**
