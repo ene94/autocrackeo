@@ -6,13 +6,13 @@ La idea es tener varios archivos fast.json, basic.json, full.json, etc. con ataq
 > python3 autocrackeo.py -m 1000 -i docs\test_files\ntlm.hash  -w docs\test_files\custom.dic -o docs\test_files\results --feedback -c all --verbose
 
 Nueva GUI para generar y ejecutar el comando de forma más visual:
-![Autocrackeo GUI](docs/autocrackeo-gui.png)
+![Autocrackeo GUI](docs/autocrackeo-gui.PNG)
 
 Ejecución de autocrackeo:
-![Autocrackeo](docs/autocrackeo.png)
+![Autocrackeo](docs/autocrackeo.PNG)
 
 Archivos de resultados generados:
-![Resultados](docs/results.png)
+![Resultados](docs/results.PNG)
 
 ## Requisitos
 Probado en windows/linux con python 3
