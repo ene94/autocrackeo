@@ -1,4 +1,8 @@
-import wget, os
+try:
+	import wget, os
+except Exception as e:
+	print("Import wget module!")
+	print("[X] Exception: " + e)
 
 def download_files(files, directory):
 

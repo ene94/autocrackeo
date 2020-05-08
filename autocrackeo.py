@@ -23,7 +23,7 @@ except Exception as e:
  Manage input parameters
 """
 def getArguments():
-	parser = argparse.ArgumentParser(description="Automated Hashcat usage tool", epilog='Usage: python3 autocrackeo.py -m 1000 -i docs\\test_files\\ntlm.hash -w docs\\test_files\\custom.dic -o docs\\test_files\\results -c all -e="--username" --feedback --verbose')
+	parser = argparse.ArgumentParser(description="Automated Hashcat usage tool", epilog='Usage: python3 autocrackeo.py -m 1000 -i docs\\test_files\\ntlm.hash -w docs\\test_files\\custom.dic -o docs\\test_files\\results -a all -e="--username" --feedback --verbose')
 	
 	# or hashfile + hashtype, or hash files list
 	parser.add_argument("-m", type=str, dest="hash_type", help="hashcat's hash type number or its corresponding title, more info here: https://hashcat.net/wiki/doku.php?id=example_hashes")
@@ -32,10 +32,10 @@ def getArguments():
 	group.add_argument("-I", "--hash-files-list", type=str,  dest="hash_files", help="path to the json file with a list of hash files and types to crack")
 	
 	# -c  execute attacks
-	parser.add_argument("-c", "--config", type=str, dest="config_file", help="configuration (json) filename to use with specific attacks (relative path from: /autocrackeo/config/, or absolute path")
+	parser.add_argument("-a", "--attacks", type=str, dest="attacks_file", help="filename to use with specific preconfigured attacks (relative path from: /autocrackeo/attacks/[quick_test].json without the extension")
 	
 	# -w use custom wordlist from custom path
-	parser.add_argument("-w", "--wordlist-custom", type=str, dest="wordlist_custom_file", help="custom wordlist to use instead of default /autocrackeo/wordlists/custom.dic")
+	parser.add_argument("-w", "--wordlist-custom", type=str, dest="wordlist_custom_file", help="custom primary wordlist to use instead of default /autocrackeo/wordlists/super.dic")
 
 	# extra params to add at the end of the hashcat command
 	parser.add_argument("-e", "--extra-params", type=str, dest="extra_params", default="", help="extra params to add in the hashcat command")
@@ -51,8 +51,8 @@ def getArguments():
 
 def main(color):
 	"""
-	 configuration: all the config data
-	 attacks: configure attacks from config data
+	 configuration: all the attacks and config data from the user and files
+	 attacks: configure attacks from files data
 	 hashcat: calls to hashcat individual attacks
 	"""
 
@@ -66,19 +66,19 @@ def main(color):
 	# get input arguments
 	arguments = getArguments()
 
-	if not arguments.config_file:
-		Color.showError("Nothing happening here... add [-c config_file] to execute attacks", True)
+	if not arguments.attacks_file:
+		Color.showError("Nothing happening here... add [-a attacks_file] to execute attacks", True)
 
 
 	"""
-	 For every config_file in the list (all configs)
+	 For every attacks_file in the list (all configs)
 	"""
-	config_files_list = Configuration.getConfigFilesArray(arguments.config_file)
+	attacks_file_list = Configuration.getConfigFilesArray(arguments.attacks_file)
 
-	for config_file in config_files_list:
+	for attacks_file in attacks_file_list:
 
 		"""
-		 For every hash_file in the list, execute all the defined attacks in the config_file
+		 For every hash_file in the list, execute all the defined attacks in the attacks_file
 		"""
 		hash_files_list = Configuration.getHashFilesArray(arguments.hash_file, arguments.hash_type, arguments.extra_params, arguments.hash_files)
 
@@ -106,7 +106,7 @@ def main(color):
 				break
 
 			# load other scripts
-			conf = Configuration(hash_file, hash_type, config_file, extra_params, arguments.output_dir, arguments.wordlist_custom_file)
+			conf = Configuration(hash_file, hash_type, attacks_file, extra_params, arguments.output_dir, arguments.wordlist_custom_file)
 			hashcat = Hashcat(conf.static_values, arguments.verbose, color)
 			attacks = Attacks(hashcat)
 
@@ -117,12 +117,12 @@ def main(color):
 			Color.showVerbose("The results (potfile, cracked passwords and logfile) will be written to: " + conf.results_dir + "\n")
 
 			# print important info
-			Color.showTitle("")
-			msg = "Attacks config file:" + config_file + ", hash file:" + hash_file + ", hash type:" + hash_type + ", extra params:" + extra_params
+			Color.showTitle(Color.datetime_to_string(datetime.now()))
+			msg = "Attacks config file:" + attacks_file + ", hash file:" + hash_file + ", hash type:" + hash_type + ", extra params:" + extra_params
 			Color.showMessage(msg  + "\n") # show attack file
 			color.logThis("[i] " + Color.datetime_to_string(datetime.now()) + ", " + msg) # log attack file
 
-			if config_file: # if -c/--config
+			if attacks_file: # if -c/--config
 				"""
 				 Execute a specific selection of hashcat attacks
 				 previously defined on the configuration json file
@@ -130,7 +130,7 @@ def main(color):
 				"""
 				try:
 					for attack_name in conf.attacks:
-						if arguments.verbose: Color.showVerbose("Attack type: " + attack_name.replace("_"," ").title())
+						if arguments.verbose: Color.showVerbose("Attack type: " + attack_name.replace("_"," ").title()) # nice print
 						if "straight" in attack_name:
 							attacks.straight_attacks(attack_name, conf.attacks[attack_name], conf.wordlists, conf.rules)
 						elif "combinator" in attack_name:
@@ -150,7 +150,7 @@ def main(color):
 				except KeyboardInterrupt:
 					"""
 					 Set a SIGINT signal handler 
-					 to securely skip all the attacks for this hash_file and config_file
+					 to securely skip all the attacks for this hash_file and attacks_file
 					 but it continues the loop
 					"""
 					Color.showError("Skipping attacks", False)

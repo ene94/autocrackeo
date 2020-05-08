@@ -1,4 +1,5 @@
 import os
+from pprint import pprint
 
 try:
   from tkinter import *
@@ -15,7 +16,6 @@ except ImportError as e:
 # START GUI PROGRAM
 root = Tk()
 root.title("Autocrackeo GUI")
-#root.geometry("400x400")
 # TODO DESIGN AUTOCRACKEO ICON
 #root.iconbitmap("D:\\proyects\\programming\\guis\\logo.ico") 
 
@@ -35,7 +35,7 @@ input_i = Entry(frame_args, width=100)
 input_I = Entry(frame_args, width=100)
 input_w = Entry(frame_args, width=100)
 input_o = Entry(frame_args, width=100)
-input_c = Entry(frame_args, width=100)
+input_a = Entry(frame_args, width=100)
 input_e = Entry(frame_opts, width=100)
 entry_cmd = st.ScrolledText(root, width=100, height=5)
 
@@ -51,38 +51,41 @@ def clean_data():
   input_w.insert(0, "")
   input_o.delete(0, END)
   input_o.insert(0, "")
-  input_c.delete(0, END)
-  input_c.insert(0, "")
+  input_a.delete(0, END)
+  input_a.insert(0, "")
   input_e.delete(0, END)
   input_e.insert(0, "")
 
 # Set example data
 def set_example_data():
+
+  autocrackeo_dir = os.path.abspath(os.path.dirname(__file__)) # get directory of this script location: ...\autocrackeo
+
   input_m.delete(0, END)
   input_m.insert(0, "1000")
   input_i.delete(0, END)
-  input_i.insert(0, "\"docs\\test_files\\ntlm.hash\"")
+  input_i.insert(0, "\"" + os.path.join(autocrackeo_dir, "docs", "test_files", "ntlm.hash") + "\"")
   input_w.delete(0, END)
-  input_w.insert(0, "\"docs\\test_files\\custom.dic\"")
+  input_w.insert(0, "\"" + os.path.join(autocrackeo_dir, "docs", "test_files", "custom.dic") + "\"")
   input_o.delete(0, END)
-  input_o.insert(0, "\"docs\\test_files\\results\"")
-  input_c.delete(0, END)
-  input_c.insert(0, "\"quick_test.json\"")
+  input_o.insert(0, "\"" + os.path.join(autocrackeo_dir, "docs", "test_files", "results") + "\"")
+  input_a.delete(0, END)
+  input_a.insert(0, "\"quick_test\"")
   input_e.delete(0, END)
-  input_e.insert(0, "--username")
+  input_e.insert(0, "\"--username\"")
 
 # Select file path
 def select_file_get_path(input_field):
-  current_dir = os.getcwd()
-  filename = filedialog.askopenfilename(initialdir=current_dir, title="select hash file path")
+  autocrackeo_dir = os.path.normpath(os.path.dirname(__file__))
+  filename = filedialog.askopenfilename(initialdir=autocrackeo_dir, title="select file path")
   filename = os.path.normpath(filename)
   input_field.delete(0,END)
   input_field.insert(0,"\"" + filename + "\"")
 
 # Select dir path
 def select_dir_get_path(input_field):
-  current_dir = os.getcwd()
-  dirname = filedialog.askdirectory(initialdir=current_dir, title="select hash file path")
+  autocrackeo_dir = os.path.normpath(os.path.dirname(__file__))
+  dirname = filedialog.askdirectory(initialdir=autocrackeo_dir, title="select dir path")
   dirname = os.path.normpath(dirname)
   input_field.delete(0,END)
   input_field.insert(0,"\"" + dirname + "\"")
@@ -94,24 +97,44 @@ def show_command():
   i = input_i.get()
   w = input_w.get()
   o = input_o.get()
-  c = input_c.get()
+  a = input_a.get()
   e = input_e.get()
+  f = feedback.get()
+  v = verbose.get()
+  
+  autocrackeo_dir_path = os.path.abspath(os.path.dirname(__file__)) # get directory of this script location
+  autocrackeo_path = os.path.join(autocrackeo_dir_path, "autocrackeo.py")
 
-  cmd = "python3 autocrackeo.py " + " -m " + m + " -i " + i + " -w " + w + " -o " + o + " -c " + c + " -e=\"" + e + "\""
+  #cmd = "python3 " + autocrackeo_path + " -m " + m + " -i " + i + " -w " + w + " -o " + o + " -a " + a + " -e=\"" + e + "\""
+  cmd = "python3 " + autocrackeo_path
 
-  if feedback.get() == "1":
+  if m:
+    cmd += " -m " + m
+  if i:
+    cmd += " -i " + i
+  if w:
+     cmd += " -w " + w
+  if o:
+     cmd += " -o " + o
+  if a:
+     cmd += " -a " + a
+  if e:
+     cmd += " -e=" + e
+  if f == "1":
     cmd += " --feedback"
-  if verbose.get() == "1":
+  if v == "1":
     cmd += " --verbose"
 
+  # write in the text box
   entry_cmd.delete("0.0",END)
   entry_cmd.insert("0.0",cmd)
 
   return cmd
 
-# execute command
+# execute command read from text box
 def exec_command():
-  cmd = show_command()
+  cmd = entry_cmd.get(0.0, END).strip()
+
   os.system("echo [*] " + cmd) # show
   # os.system(cmd) # exec
   # run process in a thread to avoid blocking gui
@@ -119,7 +142,8 @@ def exec_command():
   t.start()
 
 def exec_in_thread():
-  cmd = show_command()
+  cmd = entry_cmd.get(0.0, END).strip()
+
   p = Popen(cmd,  universal_newlines=True)
   # print('process created with pid: {}'.format(p.pid))
   # TODO show results ¿?
@@ -166,9 +190,9 @@ button_o = Button(frame_args, text=" ... ", command=lambda:select_dir_get_path(i
 button_o.grid(row=5, column=2)
 
 # attacks config
-label_c = Label(frame_args, text="Config file (-c all): ")
+label_c = Label(frame_args, text="Attacks file (-a all): ")
 label_c.grid(row=6, column=0, sticky=E)
-input_c.grid(row=6, column=1)
+input_a.grid(row=6, column=1)
 
 # Other parameter options
 

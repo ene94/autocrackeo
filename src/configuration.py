@@ -9,7 +9,7 @@ class Configuration(object):
 	"""
 	 Gather all the information and configuration the program is going to use
 	"""
-	def __init__(self, hash_file, hash_type, config_file, extra_params, output_dir, wordlist_custom_dir):
+	def __init__(self, hash_file, hash_type, attacks_file, extra_params, output_dir, wordlist_custom_dir):
 		self.color = Color()
 		conf = None
 		hostconf = None
@@ -21,17 +21,17 @@ class Configuration(object):
 		"""
 		# ....../autocrackeo/src/configuration.py --> ......./autocrackeo/
 		base_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))	# print("base_dir: " + base_dir)
-		self.config_dir = os.path.join(base_dir, "config")
-		self.wordlists_dir = os.path.join(base_dir, "wordlists") 	# base_dir = D:\NEVADA\
-		self.rules_dir = os.path.join(base_dir, "rules")			# base_dir = D:\NEVADA\
-		self.masks_dir = os.path.join(base_dir, "masks")			# base_dir = D:\NEVADA\
+		self.attacks_dir = os.path.join(base_dir, "attacks")
+		self.wordlists_dir = os.path.join(base_dir, "wordlists")
+		self.rules_dir = os.path.join(base_dir, "rules")
+		self.masks_dir = os.path.join(base_dir, "masks")
 		self.source_dir = os.path.join(base_dir, "src")
 
 		# configure results dir and create folder if not exists
 		if output_dir:
-			self.results_dir = os.path.join(output_dir)				# base_dir = D:\NEVADA\proyectos\{nombre_proyecto}\
+			self.results_dir = os.path.join(output_dir)
 		else:
-			self.results_dir = os.path.join(".")  					# if not selected, make current dir .
+			self.results_dir = os.path.join(".")# if not selected, make current dir .
 		try:
 			if not os.path.exists(self.results_dir):
 				os.makedirs(self.results_dir)
@@ -43,7 +43,7 @@ class Configuration(object):
 			 Load hashcat execution parameters from host-config file
 			"""
 			#read and extract json data
-			with open(os.path.join(self.config_dir, "HOST_CONFIG.json"), "r", encoding="utf-8") as f:
+			with open(os.path.join(self.source_dir, "HOST_CONFIG.json"), "r", encoding="utf-8") as f:
 				hostconf = json.load(f)
 
 			# host config: executable, resources
@@ -61,7 +61,7 @@ class Configuration(object):
 			self.static_values["out_file_cracked"] = os.path.join(self.results_dir, cracked_file_name)
 			hash_type = self.checkHashType(hash_type)
 			self.static_values["hash_type"] = hash_type
-			self.static_values["config_file"] = config_file
+			self.static_values["attacks_file"] = attacks_file
 			self.static_values["extra_params"] = extra_params
 
 			# Define potfile
@@ -76,14 +76,14 @@ class Configuration(object):
 					Color.showError("File {file_path} does not exist...".format(file_path=file_path), True)
 
 			"""
-			 Load attacks and useful files from config file
+			 Load attacks and useful files from attacks json file
 			 And add the relative paths to the files to use
 			"""
 
-			if config_file:
-				# load /autocrackeo/config/ + {config_file}
-				config_path = os.path.join(self.config_dir, config_file) # print(config_path)
-				with open(config_path, "r", encoding="utf-8") as f:
+			if attacks_file:
+				# load /autocrackeo/attacks/ + {attacks_file}
+				attacks_path = os.path.join(self.attacks_dir, attacks_file)
+				with open(attacks_path, "r", encoding="utf-8") as f:
 					conf = json.load(f)
 
 					self.wordlists, self.rules,self.masks = [], [], []
@@ -93,10 +93,16 @@ class Configuration(object):
 					# path to the files:
 					## wordlists
 					for wordlist in self.static_values["wordlists_files"]:
-						if wordlist_custom_dir and wordlist and wordlist == "custom.dic":
-							self.wordlists.append(os.path.join(wordlist_custom_dir)) # if input argument -w custom_wordlist.txt replace default custom.dic
-						else:
-							self.wordlists.append(os.path.join(self.wordlists_dir, wordlist))
+						if wordlist:
+							if wordlist != "custom.dic":
+								self.wordlists.append(os.path.join(self.wordlists_dir, wordlist))
+							else:
+								if wordlist_custom_dir:
+									self.wordlists.append(os.path.join(wordlist_custom_dir)) # if input argument -w custom_wordlist.txt replace default custom.dic
+								else:
+									self.wordlists.append(os.path.join(self.wordlists_dir,"super.dic")) # else take super.dic by default instead of custom.dic wordlist
+									
+							
 					
 					## rules
 					for rules_file in self.static_values["rules_files"]:
@@ -168,27 +174,27 @@ class Configuration(object):
 			Color.showException(e)
 
 	@staticmethod
-	def getConfigFilesArray(config_file):
-		if config_file:
-			if config_file == "all":
-				config_files_list = Configuration.parseConfigFilesList(config_file + ".json")			
+	def getConfigFilesArray(attack_file):
+		if attack_file:
+			if attack_file == "all":
+				attack_file_list = Configuration.parseConfigFilesList(attack_file + ".json")			
 			else:
-				config_files_list = [config_file]
+				attack_file_list = [attack_file + ".json"]
 
-			return config_files_list
+			return attack_file_list
 		else:
-			Color.showError("Invalid ConfigFile", True)
+			Color.showError("Invalid attacks config file", True)
 
 	@staticmethod
-	def parseConfigFilesList(all_configs_file):
+	def parseConfigFilesList(all_attacks_file):
 		"""
-		 Parse config_files list from json file
+		 Parse attacks_files list from json file
 		"""
 		try:
-			path = os.path.join(Configuration.getBaseDir(), "config", all_configs_file)
+			path = os.path.join(Configuration.getBaseDir(), "attacks", all_attacks_file)
 			with open(path, "r", encoding="utf-8") as f:
 				json_file = json.load(f)
-				files_list = json_file["config_files"]
+				files_list = json_file["attacks_files"]
 				return files_list
 
 		except Exception as e:

@@ -24,8 +24,6 @@
 	* actualizar los archivos de ejemplos de configuración y READMEs acorde a los cambios.
 	* Añadir búsqueda rápida de tipos de hash, para introducir "NTLM" en lugar de "1000", por ejemplo.
 
-# En proceso --> No subido a github
-
 * 06/02/2019: v1.3
 	* simplificar la obtención de resultados: mostrar en pantalla sólo comando del hashcat + crackeados al instante, generar archivos con el nombre del hashlist y contenido usuario:contraseña en un directorio concreto al usar -r o --results
 	* posibilidad de saltarse la secuencia de ataques y pasar directamente a los resultados con las teclas "Ctrl+c"
@@ -61,3 +59,17 @@
 	* añadida interfaz gráfica con tkinter para lanzar el comando de autocrackeo en un thread aparte
 	* añadida la función de logger para guardar en un archivo los comandos que se han ido ejecutando
 	* update readme with demo images
+
+* 08/05/2020: v1.9
+	* arreglar rutas de autocrackeo si se lanza desde otro directorio
+	* quitar del usuario la parte de escribir el .json de los ataques
+	* si no incluyes un wordlist con la opción -w, por defecto usa como diccionario primario wordlists\super.dic
+	* cambiar nomenclatura de configuración -c por ataque -a, que es menos confuso
+	* recuperar contenido original de super.dic que había borrado sin querer
+
+# TODO
+
+* GUI: añadir desplegable de ataques (quick_test, fast, basic, custom...)
+* GUI: en lugar de recalcular el comando y ejecutar, que lea el contenido del text box por si el usuario lo cambmia a mano
+* Un Keyboard Interrupt que te cancele la ejecución total, sino queda feo tener que darle mucho al Ctrl+C hasta que falla el script y para...
+* acabar setup con la parte de descomprimir diccionarios y comprobar que funcione tanto en linux como en windows

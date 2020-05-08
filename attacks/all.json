@@ -1,5 +1,5 @@
 {
-	"config_files": [
+	"attacks_files": [
 		"quick_test.json",
 		"fast.json",
 		"basic.json",

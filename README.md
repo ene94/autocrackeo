@@ -3,9 +3,9 @@ Programa en python que automatiza el uso del hashcat para crackear contraseñas
 
 La idea es tener varios archivos fast.json, basic.json, full.json, etc. con ataques de hashcat predefinidos que se ajusten a la velocidad/eficiencia que se requiera en cada momento. Al ejecutar el autocrackeo especificando uno de estos archivos, el programa ejecutará secuencialmente (sin necesidad de supervisión) los ataques de hashcat con los diccionarios, reglas y máscaras definidos en él.
 
-> python3 autocrackeo.py -m 1000 -i docs\test_files\ntlm.hash  -w docs\test_files\custom.dic -o docs\test_files\results --feedback -c all --verbose
+> python3 autocrackeo.py -m 1000 -i docs\test_files\ntlm.hash  -w docs\test_files\custom.dic -o docs\test_files\results --feedback -a all --verbose
 
-Nueva GUI para generar y ejecutar el comando de forma más visual:
+Nueva GUI para generar y ejecutar el comando de forma más visual: `python3 autocrackeo-gui.py`
 ![Autocrackeo GUI](docs/autocrackeo-gui.PNG)
 
 Ejecución de autocrackeo:
@@ -36,8 +36,8 @@ python3 setup.py
 ## Manual de usuario
 
 ### Por dónde empezar...
-Especifica el path al ejecutable de hashcat y las opciones de rendimiento en el archivo de configuración del equipo "HOST_CONFIG.json", por ejemplo:
-* executable: hashcat64.exe (Windows) y hashcat (Linux)
+Especifica el path al ejecutable de hashcat y las opciones de rendimiento en el archivo de configuración del equipo "src\HOST_CONFIG.json", por ejemplo:
+* executable: hashcat64.exe (Windows) y hashcat (Linux) (en linux o  versiones anteriores de hashcat en windows puedes especificar la ruta absoluta)
 * resources: Opciones de hashcat para funcionar dependiendo del equipo en el que se ejecuta: -D 1 -w 3 --force ...
 
 Ejecuta el programa: 
@@ -51,7 +51,7 @@ Ejecuta el programa:
 
 
 ### Personalización
-1. Modifica el archivo de configuración HOST-CONFIG.json para tu entorno y necesidades.
+1. Modifica el archivo de configuración src\HOST-CONFIG.json para tu entorno y necesidades.
 2. Introduce más archivos de diccionarios, reglas y máscaras en los directorios wordlists/, rules/ y masks/ respectivamente.
 3. Modifica los archivos de configuración de ataques a tu gusto.
 	* Lista los archivos de diccionarios, reglas y máscaras que quieras utilizar en este caso.
@@ -69,23 +69,23 @@ python3 autocrackeo.py -h
 Ejemplo más sencillo: lanza comandos de hashcat sobre el archivo de hashes de entrada  
 Tenéis unos archivos de prueba en la siguiente ruta autocrackeo\docs\test_files: ntlm.hash y custom.dic
 ```console
-python3 %PATH_AUTOCRACKEO%/autocrackeo.py -i %PATH_PROYECTO%\ntlm.hash -m 1000 -c all
+python3 %PATH_AUTOCRACKEO%/autocrackeo.py -i %PATH_PROYECTO%\ntlm.hash -m 1000 -a all
 ```
 
 Un archivo: pasando un diccionario de entrada personalizado y diciéndole donde dejar los resultados
 ```console
-python3 %PATH_AUTOCRACKEO%/autocrackeo.py -m 1000 -i %PATH_PROYECTO%\ntlm.hash -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results_dir -e="--username" -c quick_test.json
+python3 %PATH_AUTOCRACKEO%/autocrackeo.py -m 1000 -i %PATH_PROYECTO%\ntlm.hash -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results_dir -e="--username" -a quick_test.json
 ```
 
 Varios archivos secuencialmente: para más información ver explicación en la carpeta "docs/Ejemplos"
 ```console
-python3 %PATH_AUTOCRACKEO%/autocrackeo.py -I %PATH_PROYECTO%\hash_files_list.json -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results -e="--username" -c quick_test.json 
+python3 %PATH_AUTOCRACKEO%/autocrackeo.py -I %PATH_PROYECTO%\hash_files_list.json -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results -e="--username" -a quick_test.json 
 ```
 
 Nota: en algunas versiones de hashcat te fuerza a ejecutar el hashcat desde el propio directorio del ejecutable, así que modificar las rutas a los archivos para ese caso concreto. Por ejemplo:
 ```console
 cd \tools\hashes\hashcat-5.1.0\
-python3 %PATH_AUTOCRACKEO%\autocrackeo.py -m ntlm  -i %PATH_PROYECTO%\ntlm.hash  -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results -c quick_test.json
+python3 %PATH_AUTOCRACKEO%\autocrackeo.py -m ntlm  -i %PATH_PROYECTO%\ntlm.hash  -w %PATH_PROYECTO%\custom_wordlist.dic -o %PATH_PROYECTO%\results -a quick_test.json
 ```
 
 Se recomienda el uso de las siguientes opciones:
