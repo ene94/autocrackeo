@@ -10,6 +10,7 @@ try:
 	if sys.version_info[0] < 3 or sys.version_info[1] < 6:
 	    sys.exit("[X] Python version must be at least 3.6, current is " + version)
 
+	import time
 	from datetime import datetime, timedelta
 	from src.color import Color
 	from src.configuration import Configuration
@@ -61,7 +62,8 @@ def main(color):
 	Color.showVerbose("Start date: " + Color.datetime_to_string(start_date))
 	Color.showVerbose("Press enter or [s] to see hashcat's status...")
 	Color.showVerbose("Press [q]' to skip one hashcat command...")
-	Color.showVerbose("Press [Ctrl+c] to skip all hashcat commands at once...")
+	Color.showVerbose("Press [Ctrl+c] to skip one attack file...")
+	Color.showVerbose("Press [Ctrl+c] x3 times to stop all attacks...")
 
 	# get input arguments
 	arguments = getArguments()
@@ -69,96 +71,122 @@ def main(color):
 	if not arguments.attacks_file:
 		Color.showError("Nothing happening here... add [-a attacks_file] to execute attacks", True)
 
+	# ctrl+c signal counter for exiting program instead of bypassing resources
+	interruptCounter = 0
+	lastInterruptTime = datetime.now()
 
-	"""
-	 For every attacks_file in the list (all configs)
-	"""
-	attacks_file_list = Configuration.getConfigFilesArray(arguments.attacks_file)
-
-	for attacks_file in attacks_file_list:
-
+	try:
 		"""
-		 For every hash_file in the list, execute all the defined attacks in the attacks_file
+		For every attacks_file in the list (all configs)
 		"""
-		hash_files_list = Configuration.getHashFilesArray(arguments.hash_file, arguments.hash_type, arguments.extra_params, arguments.hash_files)
+		attacks_file_list = Configuration.getConfigFilesArray(arguments.attacks_file)
 
-		for hash_file_item in hash_files_list:
-			parsing_errors = False
+		for attacks_file in attacks_file_list:
 
-			if hash_file_item:
-				if hash_file_item["hash_file"]:
-					hash_file = hash_file_item["hash_file"]
+			"""
+			For every hash_file in the list, execute all the defined attacks in the attacks_file
+			"""
+			hash_files_list = Configuration.getHashFilesArray(arguments.hash_file, arguments.hash_type, arguments.extra_params, arguments.hash_files)
+
+			for hash_file_item in hash_files_list:
+				parsing_errors = False
+
+				if hash_file_item:
+					if hash_file_item["hash_file"]:
+						hash_file = hash_file_item["hash_file"]
+					else:
+						parsing_errors = True
+					if hash_file_item["hash_type"]:
+						hash_type = hash_file_item["hash_type"]
+					else:
+						parsing_errors = True
+					if len(hash_file_item) == 3 and hash_file_item["extra_params"]:
+						extra_params = hash_file_item["extra_params"]
+					else:
+						extra_params = ""
 				else:
 					parsing_errors = True
-				if hash_file_item["hash_type"]:
-					hash_type = hash_file_item["hash_type"]
-				else:
-					parsing_errors = True
-				if len(hash_file_item) == 3 and hash_file_item["extra_params"]:
-					extra_params = hash_file_item["extra_params"]
-				else:
-					extra_params = ""
-			else:
-				parsing_errors = True
 
-			if parsing_errors:
-				Color.showError("Error in the files/types/extra_param parsing... skipping this file", False)
-				break
+				if parsing_errors:
+					Color.showError("Error in the files/types/extra_param parsing... skipping this file", False)
+					break
 
-			# load other scripts
-			conf = Configuration(hash_file, hash_type, attacks_file, extra_params, arguments.output_dir, arguments.wordlist_custom_file)
-			hashcat = Hashcat(conf.static_values, arguments.verbose, color)
-			attacks = Attacks(hashcat)
+				# load other scripts
+				conf = Configuration(hash_file, hash_type, attacks_file, extra_params, arguments.output_dir, arguments.wordlist_custom_file)
+				hashcat = Hashcat(conf.static_values, arguments.verbose, color)
+				attacks = Attacks(hashcat)
 
-			
-			#set logging file
-			log_path = os.path.join(conf.results_dir, "autocrackeo.log")
-			color.setFileHandler(log_path) # set log file
-			Color.showVerbose("The results (potfile, cracked passwords and logfile) will be written to: " + conf.results_dir + "\n")
+				
+				#set logging file
+				log_path = os.path.join(conf.results_dir, "autocrackeo.log")
+				color.setFileHandler(log_path) # set log file
+				Color.showVerbose("The results (potfile, cracked passwords and logfile) will be written to: " + conf.results_dir + "\n")
 
-			# print important info
-			Color.showTitle(Color.datetime_to_string(datetime.now()))
-			msg = "Attacks config file:" + attacks_file + ", hash file:" + hash_file + ", hash type:" + hash_type + ", extra params:" + extra_params
-			Color.showMessage(msg  + "\n") # show attack file
-			color.logThis("[i] " + Color.datetime_to_string(datetime.now()) + ", " + msg) # log attack file
+				# print important info
+				Color.showTitle(Color.datetime_to_string(datetime.now()))
+				msg = "Attacks config file:" + attacks_file + ", hash file:" + hash_file + ", hash type:" + hash_type + ", extra params:" + extra_params
+				Color.showMessage(msg  + "\n") # show attack file
+				color.logThis("[i] " + Color.datetime_to_string(datetime.now()) + ", " + msg) # log attack file
 
-			if attacks_file: # if -c/--config
-				"""
-				 Execute a specific selection of hashcat attacks
-				 previously defined on the configuration json file
-				 This will be updated gradually as the efficiency of the attacks are measured
-				"""
-				try:
-					for attack_name in conf.attacks:
-						if arguments.verbose: Color.showVerbose("Attack type: " + attack_name.replace("_"," ").title()) # nice print
-						if "straight" in attack_name:
-							attacks.straight_attacks(attack_name, conf.attacks[attack_name], conf.wordlists, conf.rules)
-						elif "combinator" in attack_name:
-							attacks.combinator_attacks(attack_name, conf.attacks[attack_name], conf.wordlists)
-						elif "brute_force" in attack_name:
-							attacks.brute_force_attacks(attack_name, conf.attacks[attack_name], conf.masks)
-						elif "hybrid" in attack_name:
-							attacks.hybrid_attacks(attack_name, conf.attacks[attack_name], conf.wordlists, conf.masks)
-						elif "one_word_per_hash" in attack_name:
-							attacks.OneWordPerHashAttacks(attack_name, conf.attacks[attack_name], conf.wordlists)
+				if attacks_file: # if -c/--config
+					"""
+					Execute a specific selection of hashcat attacks
+					previously defined on the configuration json file
+					This will be updated gradually as the efficiency of the attacks are measured
+					"""
+					try:
+						for attack_name in conf.attacks:
+							if arguments.verbose: Color.showVerbose("Attack type: " + attack_name.replace("_"," ").title()) # nice print
+							if "straight" in attack_name:
+								attacks.straight_attacks(attack_name, conf.attacks[attack_name], conf.wordlists, conf.rules)
+							elif "combinator" in attack_name:
+								attacks.combinator_attacks(attack_name, conf.attacks[attack_name], conf.wordlists)
+							elif "brute_force" in attack_name:
+								attacks.brute_force_attacks(attack_name, conf.attacks[attack_name], conf.masks)
+							elif "hybrid" in attack_name:
+								attacks.hybrid_attacks(attack_name, conf.attacks[attack_name], conf.wordlists, conf.masks)
+							elif "one_word_per_hash" in attack_name:
+								attacks.OneWordPerHashAttacks(attack_name, conf.attacks[attack_name], conf.wordlists)
+							else:
+								Color.showError("This attack name is not recognized!", False)
+
+							# dump plaintext passwords from potfile to custom wordlist
+							if arguments.feedback: hashcat.feedback(arguments.wordlist_custom_file)
+
+					except KeyboardInterrupt as ki:
+						"""
+						Set a SIGINT signal handler 
+						to securely skip all the attacks for this hash_file and attacks_file
+						and it continues the loop
+						but if it is x3 times clicked with less than 1 second of distance, exit program
+						"""
+						Color.showError("Ctrl+C {0}: Skipping {1} attacks...".format(interruptCounter+1,attacks_file), False)
+						color.logThis("[X] Ctrl+C {0}: Skipping {1} attacks...".format(interruptCounter+1,attacks_file))
+
+						hashcat.save_cracked() # dump results output in cracked file
+
+						interruptTime = datetime.now()
+						difference = interruptTime - lastInterruptTime
+						if (difference.total_seconds() < 1):
+							interruptCounter+=1
+							if (interruptCounter > 2):
+								ki.message = "ctrl+c x3"
+								raise
 						else:
-							Color.showError("This attack name is not recognized!", False)
+							interruptCounter = 0
+						
+						lastInterruptTime = interruptTime
 
-						# dump plaintext passwords from potfile to custom wordlist
-						if arguments.feedback: hashcat.feedback(arguments.wordlist_custom_file)
+					except Exception as e:
+						Color.showException(e, True)
 
-				except KeyboardInterrupt:
-					"""
-					 Set a SIGINT signal handler 
-					 to securely skip all the attacks for this hash_file and attacks_file
-					 but it continues the loop
-					"""
-					Color.showError("Skipping attacks", False)
-					color.logThis("[X] Ctrl+C: Skipping attacks...")
-				except Exception as e:
-					Color.showException(e, True)
+					hashcat.save_cracked() # ALWAYS DUMP RESULTS: for every config file tried, and every hash file/type
 
-				hashcat.save_cracked() # ALWAYS DUMP RESULTS: for every config file tried, and every hash file/type
+	except KeyboardInterrupt as ki:
+		Color.showError("Ctrl+C (x3): Exiting attacks...", False)
+		color.logThis("[X] Ctrl+C (x3): Exiting attacks...")
+	except Exception as e:
+		Color.showError(str(e), False)
 
 	"""
 	 Print end of execution

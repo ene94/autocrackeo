@@ -1,8 +1,8 @@
 {
 	"files": {
 		"wordlists_files": [
-			"custom.dic",
-			"super.dic"
+			"custom.txt",
+			"super.txt"
 		],
 		"rules_files": [
 			"OneRuleToRuleThemAll.rule",

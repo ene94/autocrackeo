@@ -1,10 +1,10 @@
 {
 	"files": {
 		"wordlists_files": [
-			"custom.dic",
-			"cracked.dic",
-			"super.dic",
-			"rockyou.dic",
+			"custom.txt",
+			"cracked.txt",
+			"super.txt",
+			"rockyou.txt",
 			"*"
 		],
 		"rules_files": [

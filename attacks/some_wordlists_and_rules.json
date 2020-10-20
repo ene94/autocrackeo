@@ -1,11 +1,11 @@
 {
 	"files": {
 		"wordlists_files": [
-			"cracked.dic",
-			"custom.dic",
+			"cracked.txt",
+			"custom.txt",
 			"Password_Default_ProbWL.txt",
 			"hashkiller-dict.txt",
-			"super.dic",
+			"super.txt",
 			"rockyou.txt",
 			"kaonashi14M.txt",
 			"google-10000-english.txt"

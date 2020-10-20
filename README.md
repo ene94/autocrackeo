@@ -1,9 +1,16 @@
 # Autocrackeo
 Programa en python que automatiza el uso del hashcat para crackear contraseñas
 
-La idea es tener varios archivos fast.json, basic.json, full.json, etc. con ataques de hashcat predefinidos que se ajusten a la velocidad/eficiencia que se requiera en cada momento. Al ejecutar el autocrackeo especificando uno de estos archivos, el programa ejecutará secuencialmente (sin necesidad de supervisión) los ataques de hashcat con los diccionarios, reglas y máscaras definidos en él.
+Específicamente pensado para el caso de no tener excesivos recursos y no poder afrontar grandes ataques de fuerza bruta. En este caso es interesante tener a mano un amplio conjunto de recursos como diccionarios, máscaras y reglas que maximicen el resultado de hashes crackeados en el menor tiempo posible.
 
+La idea es tener varios archivos como fast.json, basic.json, full.json, etc. con ataques de hashcat predefinidos que se ajusten a la velocidad/eficiencia que se requiera en cada momento. Al ejecutar el autocrackeo especificando uno de estos archivos, el programa ejecutará secuencialmente (sin necesidad de supervisión) los ataques de hashcat con los diccionarios, reglas y máscaras definidos en él.
+
+Para ejecutar un archivo de ataques: (ejemplo para lanzar fast.json)
+> python3 autocrackeo.py -m 1000 -i docs\test_files\ntlm.hash  -w docs\test_files\custom.dic -o docs\test_files\results --feedback -a fast --verbose
+
+Para ejecutar secuencialmente diferentes archivos de ataques: (ejemplo para lanzar los archivos de ataques listados en all.json)
 > python3 autocrackeo.py -m 1000 -i docs\test_files\ntlm.hash  -w docs\test_files\custom.dic -o docs\test_files\results --feedback -a all --verbose
+
 
 Nueva GUI para generar y ejecutar el comando de forma más visual: `python3 autocrackeo-gui.py`
 ![Autocrackeo GUI](docs/autocrackeo-gui.PNG)
@@ -27,7 +34,7 @@ Instalar módulos requeridos:
 pip3 install -r requirements.txt
 ```
 
-Descargar recursos externos:
+Descargar recursos externos semi-automáticamente: (en proceso de mejora)
 * Ejecutar el script de configuración donde están los enlaces a recursos externos que son muy interesantes (diccionarios, reglas, máscaras...)
 ```
 python3 setup.py

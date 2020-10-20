@@ -9,6 +9,7 @@
 		"all_custom.json",
 		"all_hashcat_dir_rules.json",
 		"all_custom_insane.json",
+		"corporate_masks.json",
 		"brute_force_forever.json"
 	]
 }

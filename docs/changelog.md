@@ -1,4 +1,6 @@
+
 # Cambios
+
 * 06/06/2018:
 	* compatibilidad windows/linux
 
@@ -66,10 +68,28 @@
 	* si no incluyes un wordlist con la opción -w, por defecto usa como diccionario primario wordlists\super.dic
 	* cambiar nomenclatura de configuración -c por ataque -a, que es menos confuso
 	* recuperar contenido original de super.dic que había borrado sin querer
+	* gui: en lugar de recalcular el comando y ejecutar, que lea el contenido del text box por si el usuario lo cambmia a mano
+
+
+# PARA SUBIR V2 
+
+* 02/07/2020: v2.0
+	* Añadir recursos corporate masks del repositorio github.com/golem445/Corporate_Masks. Unirlas en un archivo de ataques corporate_masks.json y añadirlo al all.json.
+	* Si pulsas 3 veces seguidas en menos de 1 segundo de diferencia Ctrl+c en lugar de saltarse un ataque, para la ejecución de autocrackeo y acaba
+
+# EN PROCESO
+* XX/07/2020: v2.0
+* acabar setup.py con la parte de descomprimir diccionarios y comprobar que funcione tanto en linux como en windows
 
 # TODO
 
 * GUI: añadir desplegable de ataques (quick_test, fast, basic, custom...)
-* GUI: en lugar de recalcular el comando y ejecutar, que lea el contenido del text box por si el usuario lo cambmia a mano
-* Un Keyboard Interrupt que te cancele la ejecución total, sino queda feo tener que darle mucho al Ctrl+C hasta que falla el script y para...
-* acabar setup con la parte de descomprimir diccionarios y comprobar que funcione tanto en linux como en windows
+* separar máscaras de kaonashi entre el basic, full y bruteforce forever
+* NTDS analisys
+* check how to combine --feedback and --loopback
+* search hash from pattern
+* add john the ripper for múltiple hybrid attack like ?a?a?w?a?a
+* work with machine readable results to update a progress bar
+* list of slow/fast hashes to skip some "long/hard" attacks
+* more exception handling
+* arreglar: Skipping invalid or unsupported rule in file D:\projects\MaiShadow\autocrackeo\rules\OneRuleToRuleThemAll.rule on line 8210: ^o^─à^─é^o^t

@@ -94,13 +94,13 @@ class Configuration(object):
 					## wordlists
 					for wordlist in self.static_values["wordlists_files"]:
 						if wordlist:
-							if wordlist != "custom.dic":
+							if wordlist != "custom.txt":
 								self.wordlists.append(os.path.join(self.wordlists_dir, wordlist))
 							else:
 								if wordlist_custom_dir:
-									self.wordlists.append(os.path.join(wordlist_custom_dir)) # if input argument -w custom_wordlist.txt replace default custom.dic
+									self.wordlists.append(os.path.join(wordlist_custom_dir)) # if input argument -w custom_wordlist.txt replace default custom.txt
 								else:
-									self.wordlists.append(os.path.join(self.wordlists_dir,"super.dic")) # else take super.dic by default instead of custom.dic wordlist
+									self.wordlists.append(os.path.join(self.wordlists_dir,"super.txt")) # else take super.txt by default instead of custom.txt wordlist
 									
 							
 					

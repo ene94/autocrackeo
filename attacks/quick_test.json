@@ -1,9 +1,9 @@
 {
 	"files": {
 		"wordlists_files": [
-			"cracked.dic",
-			"custom.dic",
-			"super.dic"
+			"cracked.txt",
+			"custom.txt",
+			"super.txt"
 		],
 		"rules_files": [
 		],

@@ -70,13 +70,10 @@ class Color(object):
 
 	@staticmethod
 	def showVerbose(verbose):
-		#print("  · · · " + verbose)
 		print("  . . . " + verbose)
-		# specific for autocrackeo
 
 	@staticmethod
 	def showCmd(cmd):
-		#print(colored("\n  · · · " + verbose, 'cyan'))
 		print(colored("\n  . . . " + cmd, 'cyan'))
 
 	@staticmethod

@@ -2,6 +2,7 @@ masks/kaonashi.hcmask
 masks/2015-Top40-Time-Sort.hcmask
 masks/pathwell.hcmask
 masks/rockyou-1-60.hcmask
+masks/corp*.hcmask
 rules/OneRuleToRuleThemAll.rule
 rules/T0XlC.rule
 rules/best64.rule
@@ -24,5 +25,5 @@ docs/test_files/results
 virt
 .idea
 .vscode
+*.code-workspace
 src/__pycache__
-docs/TODOs.txt

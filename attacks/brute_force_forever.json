@@ -8,33 +8,9 @@
 		]
 	},
 	"attacks" : {
-		"straight": [
-		],
-		"straight_with_rules_manual": [
-		],
-		"straight_with_rules_files": [
-		],
-		"straight_with_combined_rules_files": [
-		],
-		"combinator": [
-		],
-		"combinator_with_rules_manual": [
-		],
-		"hybrid_right_with_masks_files": [],
-		"hybrid_right_with_masks_manual": [
-		],
-		"hybrid_left_with_masks_files": [],
-		"hybrid_left_with_masks_manual": [
-		],
-		"brute_force_automatic": [
-		],
-		"brute_force_with_masks_files": [
-		],
 		"brute_force_with_masks_manual": [
 			{"masks": "-1 ?u?l?d ?1?1?1?1?1?1?1?1", "increment_enable": 0, "increment_min": 0, "increment_max": 0},
 			{"masks": "-1 ?a ?1?1?1?1?1?1?1?1?1?1?1?1?1?1", "increment_enable": 1, "increment_min": 1, "increment_max": 14}
-		],
-		"one_word_per_hash":[
 		]
 	}
 }

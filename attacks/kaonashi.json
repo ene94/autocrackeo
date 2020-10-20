@@ -2,7 +2,7 @@
 	"files": {
 		"wordlists_files": [
 			"kaonashi14M.txt",
-			"custom.dic",
+			"custom.txt",
 			"*"
 		],
 		"rules_files": [

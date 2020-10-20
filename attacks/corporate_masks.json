@@ -1,0 +1,20 @@
+{
+	"files": {
+		"wordlists_files": [
+		],
+		"rules_files": [
+		],
+		"masks_files": [
+			"corp_8.hcmask",
+			"corp_9.hcmask",
+			"corp_10.hcmask",
+			"corp_11.hcmask",
+			"corp_12.hcmask"
+		]
+	},
+	"attacks" : {
+		"brute_force_with_masks_files": [
+			{"masks": [], "increment_enable": 0, "increment_min": 0, "increment_max": 0}
+		]
+	}
+}
