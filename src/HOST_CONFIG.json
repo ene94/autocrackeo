@@ -1,4 +1,4 @@
 {
-	"executable": "hashcat64.exe",
+	"executable": "hashcat.exe",
 	"resources": "-w 3"
 }
